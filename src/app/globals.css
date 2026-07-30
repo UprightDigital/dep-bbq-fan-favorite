@@ -28,11 +28,7 @@ body {
 }
 
 .bg-brand-hero {
-  background-image:
-    linear-gradient(180deg, rgba(0, 0, 0, 0.88) 0%, rgba(0, 0, 0, 0.97) 100%),
-    url("/brand/hero-banner.jpg");
-  background-size: cover;
-  background-position: center;
+  background-color: var(--bbq-black);
 }
 
 @media print {
