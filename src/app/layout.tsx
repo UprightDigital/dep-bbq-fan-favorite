@@ -34,7 +34,7 @@ export default function RootLayout({
       lang="en"
       className={`${rye.variable} ${oswald.variable} ${caveat.variable} h-full`}
     >
-      <body className="min-h-full flex flex-col bg-bbq-black text-bbq-white font-condensed antialiased">
+      <body className="min-h-full flex flex-col bg-bbq-black text-bbq-white font-body antialiased">
         {children}
       </body>
     </html>

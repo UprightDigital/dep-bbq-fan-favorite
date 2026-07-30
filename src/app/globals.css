@@ -20,11 +20,13 @@
   --font-display: var(--font-display);
   --font-condensed: var(--font-condensed);
   --font-script: var(--font-script);
+  --font-body: Georgia, "Times New Roman", serif;
 }
 
 body {
   background: var(--bbq-black);
   color: var(--bbq-white);
+  font-family: var(--font-body);
 }
 
 .bg-brand-hero {
