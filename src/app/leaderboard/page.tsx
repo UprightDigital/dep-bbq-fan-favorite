@@ -49,8 +49,8 @@ export default function LeaderboardPage() {
   const [first, second, third, ...rest] = teams;
 
   return (
-    <main className="flex-1 bg-brand-hero px-4 sm:px-8 py-12">
-      <div className="max-w-3xl mx-auto w-full">
+    <main className="flex-1 bg-brand-hero px-4 sm:px-8 py-6 sm:py-10">
+      <div className="brand-frame max-w-3xl mx-auto w-full px-4 sm:px-10 py-10">
         <header className="flex flex-col items-center text-center mb-12">
           <Image
             src="/brand/logo.png"

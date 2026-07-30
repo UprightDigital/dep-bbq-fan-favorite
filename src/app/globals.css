@@ -39,6 +39,52 @@ body {
 
 .bg-brand-hero {
   background-color: var(--bbq-black);
+  background-image: url("/brand/texture.jpg");
+  background-repeat: repeat;
+  background-size: 500px auto;
+}
+
+.brand-frame {
+  position: relative;
+  border: 1px solid var(--bbq-gold);
+  clip-path: polygon(
+    24px 0,
+    calc(100% - 24px) 0,
+    100% 24px,
+    100% calc(100% - 24px),
+    calc(100% - 24px) 100%,
+    24px 100%,
+    0 calc(100% - 24px),
+    0 24px
+  );
+}
+
+.brand-frame::before {
+  content: "";
+  position: absolute;
+  inset: 8px;
+  border: 1px solid rgba(183, 135, 45, 0.35);
+  clip-path: polygon(
+    18px 0,
+    calc(100% - 18px) 0,
+    100% 18px,
+    100% calc(100% - 18px),
+    calc(100% - 18px) 100%,
+    18px 100%,
+    0 calc(100% - 18px),
+    0 18px
+  );
+  pointer-events: none;
+}
+
+.divider-line {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--bbq-gold) 50%,
+    transparent 100%
+  );
 }
 
 @media print {

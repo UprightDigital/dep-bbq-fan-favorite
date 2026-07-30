@@ -28,35 +28,37 @@ export default async function VotePage({
   }
 
   return (
-    <main className="flex-1 flex flex-col items-center justify-center bg-brand-hero px-6 py-16 text-center">
-      <Image
-        src="/brand/logo.png"
-        alt="Daniel Energy Partners Permian Basin BBQ Cook-Off"
-        width={220}
-        height={141}
-        priority
-        className="w-[150px] sm:w-[190px] h-auto mb-10"
-      />
+    <main className="flex-1 flex flex-col bg-brand-hero px-4 sm:px-8 py-6 sm:py-10">
+      <div className="brand-frame flex-1 flex flex-col items-center justify-center px-6 py-12 text-center">
+        <Image
+          src="/brand/logo.png"
+          alt="Daniel Energy Partners Permian Basin BBQ Cook-Off"
+          width={220}
+          height={141}
+          priority
+          className="w-[150px] sm:w-[190px] h-auto mb-10"
+        />
 
-      {team.logo_url && (
-        <div className="relative w-44 h-28 sm:w-56 sm:h-32 mb-8 bg-bbq-white rounded-sm p-3">
-          <Image
-            src={team.logo_url}
-            alt={`${team.name} logo`}
-            fill
-            className="object-contain p-2"
-            sizes="220px"
-          />
-        </div>
-      )}
+        {team.logo_url && (
+          <div className="relative w-44 h-28 sm:w-56 sm:h-32 mb-8 bg-bbq-white rounded-sm p-3">
+            <Image
+              src={team.logo_url}
+              alt={`${team.name} logo`}
+              fill
+              className="object-contain p-2"
+              sizes="220px"
+            />
+          </div>
+        )}
 
-      <p className="font-script text-2xl text-bbq-gray mb-2">
-        You&rsquo;re voting for
-      </p>
-      <h1 className="font-display text-bbq-gold text-4xl sm:text-6xl mb-10 max-w-2xl leading-tight">
-        {team.name}
-      </h1>
-      <VoteButton teamId={team.id} teamName={team.name} />
+        <p className="font-script text-2xl text-bbq-gray mb-2">
+          You&rsquo;re voting for
+        </p>
+        <h1 className="font-display text-bbq-gold text-4xl sm:text-6xl mb-10 max-w-2xl leading-tight">
+          {team.name}
+        </h1>
+        <VoteButton teamId={team.id} teamName={team.name} />
+      </div>
     </main>
   );
 }
