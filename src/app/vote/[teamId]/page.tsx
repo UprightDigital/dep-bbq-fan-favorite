@@ -19,7 +19,7 @@ export default async function VotePage({
 
   const { data: team, error } = await supabase
     .from("teams")
-    .select("id, name")
+    .select("id, name, logo_url")
     .eq("id", id)
     .single();
 
@@ -37,6 +37,19 @@ export default async function VotePage({
         priority
         className="w-[150px] sm:w-[190px] h-auto mb-10"
       />
+
+      {team.logo_url && (
+        <div className="relative w-44 h-28 sm:w-56 sm:h-32 mb-8 bg-bbq-white rounded-sm p-3">
+          <Image
+            src={team.logo_url}
+            alt={`${team.name} logo`}
+            fill
+            className="object-contain p-2"
+            sizes="220px"
+          />
+        </div>
+      )}
+
       <p className="font-script text-2xl text-bbq-gray mb-2">
         You&rsquo;re voting for
       </p>

@@ -19,7 +19,7 @@ export default function QRCodesPage() {
     async function load() {
       const { data } = await supabase
         .from("teams")
-        .select("id, name, votes")
+        .select("id, name, votes, logo_url")
         .order("id", { ascending: true });
       if (data) setTeams(data as Team[]);
       setLoading(false);
@@ -96,6 +96,14 @@ export default function QRCodesPage() {
               <p className="text-xs uppercase tracking-widest text-neutral-500 mb-1">
                 Team {team.id}
               </p>
+              {team.logo_url && (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={team.logo_url}
+                  alt=""
+                  className="h-10 max-w-[160px] object-contain mb-2"
+                />
+              )}
               <p className="font-semibold text-lg mb-3 leading-tight">
                 {team.name}
               </p>

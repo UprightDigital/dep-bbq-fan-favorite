@@ -19,4 +19,5 @@ export type Team = {
   id: number;
   name: string;
   votes: number;
+  logo_url: string | null;
 };

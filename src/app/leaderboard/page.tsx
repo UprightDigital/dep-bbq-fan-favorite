@@ -15,7 +15,7 @@ export default function LeaderboardPage() {
     async function load() {
       const { data } = await supabase
         .from("teams")
-        .select("id, name, votes")
+        .select("id, name, votes, logo_url")
         .order("votes", { ascending: false })
         .order("name", { ascending: true });
       if (active && data) setTeams(data as Team[]);
@@ -97,6 +97,17 @@ export default function LeaderboardPage() {
                     <span className="text-bbq-gray/70 w-8 text-right shrink-0 font-condensed">
                       {i + 4}
                     </span>
+                    {team.logo_url && (
+                      <span className="relative w-8 h-8 shrink-0 bg-bbq-white rounded-sm overflow-hidden">
+                        <Image
+                          src={team.logo_url}
+                          alt=""
+                          fill
+                          className="object-contain p-0.5"
+                          sizes="32px"
+                        />
+                      </span>
+                    )}
                     <span className="uppercase tracking-wide text-sm sm:text-base truncate">
                       {team.name}
                     </span>
@@ -135,6 +146,17 @@ function Podium({ place, team }: { place: 1 | 2 | 3; team?: Team }) {
 
   return (
     <div className="flex flex-col items-center text-center min-w-0">
+      {team.logo_url && (
+        <div className="relative w-12 h-12 sm:w-14 sm:h-14 mb-2 bg-bbq-white rounded-sm overflow-hidden">
+          <Image
+            src={team.logo_url}
+            alt=""
+            fill
+            className="object-contain p-1"
+            sizes="56px"
+          />
+        </div>
+      )}
       <p className="text-xs sm:text-sm text-bbq-gray uppercase tracking-wide mb-1 truncate max-w-full px-1">
         {team.name}
       </p>
