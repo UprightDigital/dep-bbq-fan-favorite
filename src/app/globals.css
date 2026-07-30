@@ -9,6 +9,14 @@
   --bbq-white: #ffffff;
 }
 
+@font-face {
+  font-family: "Barbaro Roman";
+  src: url("/fonts/barbaro.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 @theme inline {
   --color-bbq-black: var(--bbq-black);
   --color-bbq-charcoal: var(--bbq-charcoal);
@@ -17,9 +25,9 @@
   --color-bbq-gray: var(--bbq-gray);
   --color-bbq-white: var(--bbq-white);
 
-  --font-display: var(--font-display);
-  --font-condensed: var(--font-condensed);
-  --font-script: var(--font-script);
+  --font-display: "Barbaro Roman", Georgia, serif;
+  --font-condensed: "Barbaro Roman", Georgia, serif;
+  --font-script: "adobe-handwriting-frank", cursive;
   --font-body: Georgia, "Times New Roman", serif;
 }
 
