@@ -1,0 +1,42 @@
+@import "tailwindcss";
+
+:root {
+  --bbq-black: #000000;
+  --bbq-charcoal: #141414;
+  --bbq-gold: #b7872d;
+  --bbq-bronze: #b08d57;
+  --bbq-gray: #b8b8b8;
+  --bbq-white: #ffffff;
+}
+
+@theme inline {
+  --color-bbq-black: var(--bbq-black);
+  --color-bbq-charcoal: var(--bbq-charcoal);
+  --color-bbq-gold: var(--bbq-gold);
+  --color-bbq-bronze: var(--bbq-bronze);
+  --color-bbq-gray: var(--bbq-gray);
+  --color-bbq-white: var(--bbq-white);
+
+  --font-display: var(--font-display);
+  --font-condensed: var(--font-condensed);
+  --font-script: var(--font-script);
+}
+
+body {
+  background: var(--bbq-black);
+  color: var(--bbq-white);
+}
+
+.bg-brand-hero {
+  background-image:
+    linear-gradient(180deg, rgba(0, 0, 0, 0.55) 0%, rgba(0, 0, 0, 0.85) 100%),
+    url("/brand/hero-banner.jpg");
+  background-size: cover;
+  background-position: center;
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+}
