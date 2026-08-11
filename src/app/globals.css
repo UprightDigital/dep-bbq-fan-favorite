@@ -39,9 +39,6 @@ body {
 
 .bg-brand-hero {
   background-color: var(--bbq-black);
-  background-image: url("/brand/texture.jpg");
-  background-repeat: repeat;
-  background-size: 500px auto;
 }
 
 .brand-frame {

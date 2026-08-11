@@ -45,8 +45,9 @@ export default function Home() {
           </div>
 
           <p className="max-w-xl text-bbq-gray text-sm sm:text-base mb-10 leading-relaxed">
-            Find a cook team&rsquo;s booth, scan their QR code, and tap once to
-            cast your vote for Fan Favorite. One scan, one tap &mdash; that&rsquo;s it.
+            Find a cook team&rsquo;s booth, scan their QR code, and rate them
+            1&ndash;5 stars for Fan Favorite. Rate as many teams as you like
+            &mdash; every star counts toward their total.
           </p>
 
           <Link

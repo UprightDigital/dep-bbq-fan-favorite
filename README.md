@@ -1,39 +1,43 @@
 # DEP BBQ Fan Favorite Voting
 
 A QR-code voting platform for the Daniel Energy Partners Permian Basin BBQ
-Cook-Off's Fan Favorite award. Each of the 110 cook teams gets its own QR
-code at their booth; fans scan it, tap a button, and their vote is added to
-that team's live-updating leaderboard.
+Cook-Off's Fan Favorite award. Each cook team gets its own QR code at their
+booth; fans scan it and rate that team 1&ndash;5 stars, and the rating is
+added to that team's live-updating leaderboard total.
 
 **Stack:** Next.js (deployed on Vercel) + Supabase (Postgres + Realtime for
-the live leaderboard). No login, no app install &mdash; a fan just scans and taps.
+the live leaderboard). No login, no app install &mdash; a fan just scans and taps
+a star.
 
 ## How it works
 
-- Every team has a row in a `teams` table (`id`, `name`, `votes`).
+- Every team has a row in a `teams` table (`id`, `name`, `votes`, `logo_url`).
+  `votes` holds the **cumulative sum of every star rating** submitted for
+  that team (three 5-star ratings = 15, not 3).
 - Each booth's QR code points to `https://your-domain.com/vote/{teamId}`.
-- Tapping "Vote" calls a Postgres function, `increment_team_vote`, which adds
-  exactly 1 to that team's count. Fans' browsers only have the public
-  ("anon") key, and that key is not allowed to write to the `teams` table
-  directly &mdash; only to call this function &mdash; so nobody can fake a vote
-  count via the API.
-- As you asked, there's **no per-device vote limit**: every scan + tap counts.
-  If you want to add a limit later (e.g. one vote per team per device), that
-  would go in `vote-button.tsx` using a cookie/localStorage check.
-- `/leaderboard` subscribes to Supabase Realtime, so it updates live as votes
-  come in &mdash; good for projecting on a screen at the event.
-- `/admin/qrcodes` generates and prints all 110 QR codes, using whatever
+- Tapping a star calls a Postgres function, `add_team_rating(team_id, rating)`,
+  which validates the rating is between 1 and 5 and adds it to that team's
+  running total. Fans' browsers only have the public ("anon") key, and that
+  key is not allowed to write to the `teams` table directly &mdash; only to call
+  this function &mdash; so nobody can fake a score via the API.
+- As you asked, there's **no per-device rating limit**: every scan + rating
+  counts. If you want to add a limit later (e.g. one rating per team per
+  device), that would go in `vote-button.tsx` using a cookie/localStorage
+  check.
+- `/leaderboard` subscribes to Supabase Realtime, so it updates live as
+  ratings come in &mdash; good for projecting on a screen at the event.
+- `/admin/qrcodes` generates and prints all the QR codes, using whatever
   domain the app is actually deployed on (no need to know the URL in advance).
 
 ## 1. Create the Supabase project
 
 1. In your Supabase account, create a new project for this event (separate
    from your other project).
-2. Open the **SQL Editor** and run the contents of
-   `supabase/migrations/001_init.sql`. This creates the `teams` table, the
-   `vote_log` audit table, the security policies, the `increment_team_vote`
-   function, turns on Realtime for `teams`, and seeds 110 placeholder rows
-   (`Team 1` &hellip; `Team 110`).
+2. Open the **SQL Editor** and run each migration file in `supabase/migrations/`
+   **in order** (001, then 002, then 003). `001_init.sql` creates the schema
+   and seeds placeholder teams; `002_real_teams.sql` replaces them with the
+   real roster and logos; `003_star_ratings.sql` switches voting over to the
+   1&ndash;5 star system described above.
 3. Go to **Project Settings -> API** and copy the **Project URL** and the
    **anon / public key**.
 

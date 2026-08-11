@@ -69,7 +69,8 @@ export default function LeaderboardPage() {
             Fan Favorite Leaderboard
           </h1>
           <p className="text-bbq-gray text-xs sm:text-sm mt-4 uppercase tracking-[0.2em]">
-            {totalVotes} vote{totalVotes === 1 ? "" : "s"} cast so far
+            {totalVotes} total point{totalVotes === 1 ? "" : "s"} &middot; 1&ndash;5
+            stars per rating
           </p>
         </header>
 

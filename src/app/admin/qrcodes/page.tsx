@@ -118,7 +118,7 @@ export default function QRCodesPage() {
                 <div className="w-32 h-32 sm:w-36 sm:h-36 bg-neutral-100 animate-pulse" />
               )}
               <p className="text-xs text-neutral-500 mt-3">
-                Scan to vote &bull; Fan Favorite
+                Scan to rate &bull; Fan Favorite
               </p>
             </div>
           ))}
