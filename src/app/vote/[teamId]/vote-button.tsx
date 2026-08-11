@@ -33,20 +33,22 @@ export default function VoteButton({
 }) {
   const [status, setStatus] = useState<Status>("idle");
   const [hovered, setHovered] = useState<number | null>(null);
+  const [selected, setSelected] = useState<number | null>(null);
   const [submittedRating, setSubmittedRating] = useState<number | null>(null);
 
-  async function handleRate(rating: number) {
+  async function handleConfirm() {
+    if (!selected) return;
     setStatus("voting");
     const { error } = await supabase.rpc("add_team_rating", {
       p_team_id: teamId,
-      p_rating: rating,
+      p_rating: selected,
     });
     if (error) {
       console.error(error);
       setStatus("error");
       return;
     }
-    setSubmittedRating(rating);
+    setSubmittedRating(selected);
     setStatus("voted");
   }
 
@@ -69,6 +71,7 @@ export default function VoteButton({
           onClick={() => {
             setStatus("idle");
             setSubmittedRating(null);
+            setSelected(null);
           }}
           className="text-bbq-gray text-sm underline underline-offset-4 hover:text-bbq-gold transition-colors"
         >
@@ -78,7 +81,7 @@ export default function VoteButton({
     );
   }
 
-  const active = hovered ?? 0;
+  const display = hovered ?? selected ?? 0;
 
   return (
     <div className="flex flex-col items-center gap-5">
@@ -96,18 +99,30 @@ export default function VoteButton({
             disabled={status === "voting"}
             onMouseEnter={() => setHovered(n)}
             onFocus={() => setHovered(n)}
-            onClick={() => handleRate(n)}
-            aria-label={`Rate ${n} star${n === 1 ? "" : "s"}`}
+            onClick={() => setSelected(n)}
+            aria-label={`${n} star${n === 1 ? "" : "s"}`}
+            aria-pressed={selected === n}
             className="w-11 h-11 sm:w-14 sm:h-14 text-bbq-gray hover:scale-110 transition-transform disabled:opacity-60"
-            style={{ color: n <= active ? "var(--bbq-gold)" : undefined }}
+            style={{ color: n <= display ? "var(--bbq-gold)" : undefined }}
           >
-            <Star filled={n <= active} />
+            <Star filled={n <= display} />
           </button>
         ))}
       </div>
-      {status === "voting" && (
-        <p className="text-bbq-gray text-sm">Submitting your rating&hellip;</p>
-      )}
+
+      <button
+        type="button"
+        onClick={handleConfirm}
+        disabled={!selected || status === "voting"}
+        className="bg-bbq-gold text-bbq-black font-semibold uppercase tracking-wider text-lg px-10 py-4 rounded-sm hover:bg-bbq-bronze transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+      >
+        {status === "voting"
+          ? "Submitting…"
+          : selected
+            ? `Confirm ${selected} Star${selected === 1 ? "" : "s"}`
+            : "Select a rating"}
+      </button>
+
       {status === "error" && (
         <p className="text-red-400 text-sm max-w-xs">
           Something went wrong &mdash; check your connection and try again.
