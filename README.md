@@ -34,10 +34,13 @@ a star.
 1. In your Supabase account, create a new project for this event (separate
    from your other project).
 2. Open the **SQL Editor** and run each migration file in `supabase/migrations/`
-   **in order** (001, then 002, then 003). `001_init.sql` creates the schema
-   and seeds placeholder teams; `002_real_teams.sql` replaces them with the
-   real roster and logos; `003_star_ratings.sql` switches voting over to the
-   1&ndash;5 star system described above.
+   **in order** (001, then 002, then 003, then 004). `001_init.sql` creates
+   the schema and seeds placeholder teams; `002_real_teams.sql` replaces them
+   with the real roster and logos; `003_star_ratings.sql` switches voting
+   over to the 1&ndash;5 star system described above; `004_more_logos_and_teams.sql`
+   backfills logos that arrived after the original roster and adds 6 cook
+   teams (BPX, Dark Vision, Gulf States, Moffit, Superior, Wall Street) that
+   signed up later.
 3. Go to **Project Settings -> API** and copy the **Project URL** and the
    **anon / public key**.
 

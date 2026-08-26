@@ -1,9 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 
-type Status = "idle" | "voting" | "voted" | "error";
+type Status = "idle" | "voting" | "error";
 
 function Star({ filled }: { filled: boolean }) {
   return (
@@ -31,13 +32,13 @@ export default function VoteButton({
   teamId: number;
   teamName: string;
 }) {
+  const router = useRouter();
   const [status, setStatus] = useState<Status>("idle");
   const [hovered, setHovered] = useState<number | null>(null);
   const [selected, setSelected] = useState<number | null>(null);
-  const [submittedRating, setSubmittedRating] = useState<number | null>(null);
 
   async function handleConfirm() {
-    if (!selected) return;
+    if (!selected || status === "voting") return;
     setStatus("voting");
     const { error } = await supabase.rpc("add_team_rating", {
       p_team_id: teamId,
@@ -48,37 +49,7 @@ export default function VoteButton({
       setStatus("error");
       return;
     }
-    setSubmittedRating(selected);
-    setStatus("voted");
-  }
-
-  if (status === "voted" && submittedRating) {
-    return (
-      <div className="flex flex-col items-center gap-4">
-        <div className="flex gap-1 w-40 text-bbq-gold">
-          {[1, 2, 3, 4, 5].map((n) => (
-            <span key={n} className="w-8 h-8">
-              <Star filled={n <= submittedRating} />
-            </span>
-          ))}
-        </div>
-        <p className="text-xl">
-          Thanks for rating{" "}
-          <span className="text-bbq-gold font-semibold">{teamName}</span>{" "}
-          {submittedRating} star{submittedRating === 1 ? "" : "s"}!
-        </p>
-        <button
-          onClick={() => {
-            setStatus("idle");
-            setSubmittedRating(null);
-            setSelected(null);
-          }}
-          className="text-bbq-gray text-sm underline underline-offset-4 hover:text-bbq-gold transition-colors"
-        >
-          Rate again
-        </button>
-      </div>
-    );
+    router.push(`/vote/${teamId}/confirmed?rating=${selected}`);
   }
 
   const display = hovered ?? selected ?? 0;
