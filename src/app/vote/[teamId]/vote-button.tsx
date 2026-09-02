@@ -96,7 +96,7 @@ export default function VoteButton({
 
       {status === "error" && (
         <p className="text-red-400 text-sm max-w-xs">
-          Something went wrong &mdash; check your connection and try again.
+          Something went wrong. Check your connection and try again.
         </p>
       )}
     </div>

@@ -46,8 +46,8 @@ export default function Home() {
 
           <p className="max-w-xl text-bbq-gray text-sm sm:text-base mb-10 leading-relaxed">
             Find a cook team&rsquo;s booth, scan their QR code, and rate them
-            1&ndash;5 stars for Fan Favorite. Rate as many teams as you like
-            &mdash; every star counts toward their total.
+            1&ndash;5 stars for Fan Favorite. Rate as many teams as you like,
+            and every star counts toward their total.
           </p>
 
           <Link
