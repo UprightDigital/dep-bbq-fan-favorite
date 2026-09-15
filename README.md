@@ -34,14 +34,15 @@ a star.
 1. In your Supabase account, create a new project for this event (separate
    from your other project).
 2. Open the **SQL Editor** and run each migration file in `supabase/migrations/`
-   **in order** (001 through 005). `001_init.sql` creates the schema and
+   **in order** (001 through 006). `001_init.sql` creates the schema and
    seeds placeholder teams; `002_real_teams.sql` replaces them with the real
    roster and logos; `003_star_ratings.sql` switches voting over to the
    1&ndash;5 star system described above; `004_more_logos_and_teams.sql`
    backfills logos that arrived after the original roster and adds 6 cook
    teams (BPX, Dark Vision, Gulf States, Moffit, Superior, Wall Street) that
    signed up later; `005_more_logos.sql` backfills logos for another 16
-   teams added after that.
+   teams added after that; `006_fix_broken_logo_paths.sql` fixes 4 teams
+   whose logo paths pointed at a folder that doesn't exist in this app.
 3. Go to **Project Settings -> API** and copy the **Project URL** and the
    **anon / public key**.
 
@@ -79,28 +80,29 @@ Visit `http://localhost:3000`. Try `/vote/1` to cast a test vote and
 4. Deploy. Vercel gives you a public URL &mdash; that's what your QR codes will
    point to.
 
-## 5. Rename the placeholder teams
+## 5. Adding or editing teams later
 
-Right now every team is named "Team 1" through "Team 110". Once you have the
-real team list, open the Supabase **Table Editor -> teams** and either:
+The real roster is already loaded (see migrations 002, 004, and 005). To add
+a team that signs up later or fix a name/logo, open the Supabase
+**Table Editor -> teams** and either:
 
-- Edit each row's `name` field directly (fine for a one-time setup), or
-- Use **Insert -> Import data from CSV** to bulk-replace names if you export
-  the table, edit `name` in a spreadsheet, and re-import.
+- Edit a row's `name` or `logo_url` directly, or
+- Insert a new row with the next unused `id`, a `name`, and `votes` set to 0.
 
 Team `id` numbers don't need to match anything &mdash; they're just the
 identifier baked into each QR code, so keep them stable once you've printed
-QR codes.
+QR codes for a team.
 
 ## 6. Generate and print the QR codes
 
 1. Visit `/admin/qrcodes` on your deployed site and enter the passcode.
 2. Confirm the team names look right.
-3. Click **Print all 110 cards** (or use your browser's "Save as PDF" in the
+3. Click **Print all cards** (or use your browser's "Save as PDF" in the
    print dialog) and cut out one card per booth.
 
 Regenerate/reprint any time team names change &mdash; the QR codes themselves
-don't need to change unless a team's `id` changes.
+don't need to change unless a team's `id` changes. Only reprint the specific
+cards for teams added after the last print run.
 
 ## 7. Before event day
 

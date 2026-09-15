@@ -11,7 +11,7 @@ if (!supabaseUrl || !supabaseAnonKey) {
 }
 
 // A single shared Supabase client using the public anon key.
-// Safe to use in the browser: RLS policies + the increment_team_vote()
+// Safe to use in the browser: RLS policies + the add_team_rating()
 // function are what actually protect the data (see supabase/migrations).
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
