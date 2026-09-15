@@ -39,10 +39,12 @@ a star.
    roster and logos; `003_star_ratings.sql` switches voting over to the
    1&ndash;5 star system described above; `004_more_logos_and_teams.sql`
    backfills logos that arrived after the original roster and adds 6 cook
-   teams (BPX, Dark Vision, Gulf States, Moffit, Superior, Wall Street) that
-   signed up later; `005_more_logos.sql` backfills logos for another 16
-   teams added after that; `006_fix_broken_logo_paths.sql` fixes 4 teams
-   whose logo paths pointed at a folder that doesn't exist in this app.
+   teams (BPX, Dark Vision, Gulf States, Moffitt Services, Superior, Wall
+   Street) that signed up later; `005_more_logos.sql` backfills logos for
+   another 16 teams added after that; `006_fix_broken_logo_paths.sql` fixes
+   4 teams whose logo paths pointed at a folder that doesn't exist in this
+   app; `007_moffitt_name_fix.sql` corrects team 113's name to Moffitt
+   Services.
 3. Go to **Project Settings -> API** and copy the **Project URL** and the
    **anon / public key**.
 
