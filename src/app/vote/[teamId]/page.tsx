@@ -39,24 +39,25 @@ export default async function VotePage({
           className="w-[150px] sm:w-[190px] h-auto mb-10"
         />
 
-        {team.logo_url && (
-          <div className="relative w-44 h-28 sm:w-56 sm:h-32 mb-8 bg-bbq-white rounded-sm p-3">
+        {team.logo_url ? (
+          <div className="relative w-56 h-36 sm:w-72 sm:h-44 mb-8 bg-bbq-white rounded-sm p-3">
             <Image
               src={team.logo_url}
               alt={`${team.name} logo`}
               fill
               className="object-contain p-2"
-              sizes="220px"
+              sizes="288px"
             />
           </div>
+        ) : (
+          <h1 className="font-display text-bbq-gold text-4xl sm:text-6xl mb-8 max-w-2xl leading-tight">
+            {team.name}
+          </h1>
         )}
 
-        <p className="font-script text-2xl text-bbq-gray mb-2">
+        <p className="font-script text-2xl text-bbq-gray mb-10">
           You&rsquo;re voting for
         </p>
-        <h1 className="font-display text-bbq-gold text-4xl sm:text-6xl mb-10 max-w-2xl leading-tight">
-          {team.name}
-        </h1>
         <VoteButton teamId={team.id} teamName={team.name} />
       </div>
     </main>

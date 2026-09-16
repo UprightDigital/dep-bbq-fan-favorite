@@ -62,16 +62,20 @@ export default async function VoteConfirmedPage({
           className="w-[150px] sm:w-[190px] h-auto mb-10"
         />
 
-        {team.logo_url && (
-          <div className="relative w-44 h-28 sm:w-56 sm:h-32 mb-8 bg-bbq-white rounded-sm p-3">
+        {team.logo_url ? (
+          <div className="relative w-56 h-36 sm:w-72 sm:h-44 mb-8 bg-bbq-white rounded-sm p-3">
             <Image
               src={team.logo_url}
               alt={`${team.name} logo`}
               fill
               className="object-contain p-2"
-              sizes="220px"
+              sizes="288px"
             />
           </div>
+        ) : (
+          <h1 className="font-display text-bbq-gold text-4xl sm:text-6xl mb-8 max-w-2xl leading-tight">
+            {team.name}
+          </h1>
         )}
 
         <div className="flex gap-1 w-44 sm:w-52 text-bbq-gold mb-6">
@@ -82,12 +86,9 @@ export default async function VoteConfirmedPage({
           ))}
         </div>
 
-        <p className="font-script text-2xl text-bbq-gray mb-2">
-          Your vote is in for
+        <p className="font-script text-2xl text-bbq-gray mb-10">
+          Your vote is in
         </p>
-        <h1 className="font-display text-bbq-gold text-4xl sm:text-6xl mb-8 max-w-2xl leading-tight">
-          {team.name}
-        </h1>
         <p className="text-bbq-gray text-sm sm:text-base mb-10 max-w-sm">
           Thanks for helping pick this year&rsquo;s Fan Favorite. Your rating
           has been counted.
