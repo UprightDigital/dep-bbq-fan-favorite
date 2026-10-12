@@ -21,3 +21,16 @@ export type Team = {
   votes: number;
   logo_url: string | null;
 };
+
+// The permanent public address printed on every QR code. This is fixed on
+// purpose: QR codes must never depend on whichever URL the admin page happens
+// to be opened from (preview deployments are login-protected).
+export const SITE_URL = (
+  process.env.NEXT_PUBLIC_SITE_URL || "https://dep-bbq-fan-favorite.vercel.app"
+).replace(/\/+$/, "");
+
+// What a printed QR code encodes. It only contains the team's locked
+// scan_code; /q/{scan_code} decides where to send people at scan time.
+export function qrUrl(scanCode: string) {
+  return `${SITE_URL}/q/${scanCode}`;
+}

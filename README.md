@@ -34,7 +34,7 @@ a star.
 1. In your Supabase account, create a new project for this event (separate
    from your other project).
 2. Open the **SQL Editor** and run each migration file in `supabase/migrations/`
-   **in order** (001 through 006). `001_init.sql` creates the schema and
+   **in order** (001 through 008). `001_init.sql` creates the schema and
    seeds placeholder teams; `002_real_teams.sql` replaces them with the real
    roster and logos; `003_star_ratings.sql` switches voting over to the
    1&ndash;5 star system described above; `004_more_logos_and_teams.sql`
@@ -44,7 +44,8 @@ a star.
    another 16 teams added after that; `006_fix_broken_logo_paths.sql` fixes
    4 teams whose logo paths pointed at a folder that doesn't exist in this
    app; `007_moffitt_name_fix.sql` corrects team 113's name to Moffitt
-   Services.
+   Services; `008_dynamic_qr_codes.sql` adds the optional `qr_target`
+   override and locks every team's `scan_code` (see section 6).
 3. Go to **Project Settings -> API** and copy the **Project URL** and the
    **anon / public key**.
 
@@ -95,16 +96,31 @@ Team `id` numbers don't need to match anything &mdash; they're just the
 identifier baked into each QR code, so keep them stable once you've printed
 QR codes for a team.
 
-## 6. Generate and print the QR codes
+## 6. Generate, send and print the QR codes (dynamic)
+
+QR codes are **dynamic and permanent**. Each one encodes
+`https://dep-bbq-fan-favorite.vercel.app/q/{scan_code}`, where `scan_code` is
+the team's code in the `teams` table (e.g. `DEP26-3BB36981`). The `/q` route
+looks the code up when it's scanned and redirects:
+
+- to `teams.qr_target` if set (a site path like `/leaderboard`, or a full
+  `https://` URL), otherwise
+- to that team's vote page, `/vote/{id}`.
+
+So you can rename a team, swap its logo, or re-point its code without
+reprinting. `scan_code` is locked by a database trigger (migration 008) and
+cannot be edited. The printed address is fixed to the production domain
+(override with `NEXT_PUBLIC_SITE_URL`), so it doesn't matter which URL you
+open the admin page from.
 
 1. Visit `/admin/qrcodes` on your deployed site and enter the passcode.
-2. Confirm the team names look right.
-3. Click **Print all cards** (or use your browser's "Save as PDF" in the
-   print dialog) and cut out one card per booth.
+2. Filter to **All**, **Cook teams** or **Hospitality**.
+3. **Download PNG** on any card, or **Download (ZIP)** for every code shown
+   plus a `qr-codes.csv` listing team, scan code and link.
+4. **Print** for cut-out cards.
 
-Regenerate/reprint any time team names change &mdash; the QR codes themselves
-don't need to change unless a team's `id` changes. Only reprint the specific
-cards for teams added after the last print run.
+To re-point one code, set `qr_target` on that team's row in the Supabase
+Table Editor. Clear it to go back to the vote page.
 
 ## 7. Before event day
 
