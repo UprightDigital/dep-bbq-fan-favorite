@@ -16,6 +16,7 @@ export default function LeaderboardPage() {
       const { data } = await supabase
         .from("teams")
         .select("id, name, votes, logo_url")
+        .eq("active", true)
         .order("votes", { ascending: false })
         .order("name", { ascending: true });
       if (active && data) setTeams(data as Team[]);

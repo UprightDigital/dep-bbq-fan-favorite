@@ -44,6 +44,7 @@ export default async function VoteConfirmedPage({
     .from("teams")
     .select("id, name, logo_url")
     .eq("id", id)
+    .eq("active", true)
     .single();
 
   if (error || !team) {

@@ -21,6 +21,7 @@ export default async function VotePage({
     .from("teams")
     .select("id, name, logo_url")
     .eq("id", id)
+    .eq("active", true)
     .single();
 
   if (error || !team) {

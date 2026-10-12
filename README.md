@@ -34,7 +34,7 @@ a star.
 1. In your Supabase account, create a new project for this event (separate
    from your other project).
 2. Open the **SQL Editor** and run each migration file in `supabase/migrations/`
-   **in order** (001 through 008). `001_init.sql` creates the schema and
+   **in order** (001 through 009). `001_init.sql` creates the schema and
    seeds placeholder teams; `002_real_teams.sql` replaces them with the real
    roster and logos; `003_star_ratings.sql` switches voting over to the
    1&ndash;5 star system described above; `004_more_logos_and_teams.sql`
@@ -45,7 +45,7 @@ a star.
    4 teams whose logo paths pointed at a folder that doesn't exist in this
    app; `007_moffitt_name_fix.sql` corrects team 113's name to Moffitt
    Services; `008_dynamic_qr_codes.sql` adds the optional `qr_target`
-   override and locks every team's `scan_code` (see section 6).
+   override and locks every team's `scan_code` (see section 6); `009_sync_team_list.sql` syncs the roster to the Oct 12 master list (111 cook teams, 22 hospitality tents), hides teams no longer on it and adds missing logos.
 3. Go to **Project Settings -> API** and copy the **Project URL** and the
    **anon / public key**.
 

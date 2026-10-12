@@ -51,6 +51,7 @@ export async function GET(
     .from("teams")
     .select("id, qr_target")
     .eq("scan_code", scanCode)
+    .eq("active", true)
     .maybeSingle();
 
   if (error || !team) {
