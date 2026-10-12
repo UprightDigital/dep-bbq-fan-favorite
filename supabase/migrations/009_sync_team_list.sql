@@ -1,5 +1,5 @@
 -- Sync the roster to the master list ("All teams and Hospitality", Oct 12):
--- 111 cook teams + 22 hospitality tents.
+-- 112 cook teams (incl. Merit Advisors) + 23 hospitality tents (incl. Meyer).
 -- Teams no longer on the list are hidden (active = false), not deleted, so
 -- their locked QR scan codes survive and they can be switched back on.
 
@@ -30,9 +30,11 @@ select setval('teams_id_seq', (select max(id) from teams));
 -- Not on the master list: hide
 update teams set active = false where id in (
   80,  -- Smart Chemical Services
-  131, -- Merit Advisors
   134  -- Weaver, Banc of California & Polk Capital
 );
+
+-- Merit Advisors is a cook team (was listed as hospitality)
+update teams set kind = 'Cooking', vote_eligible = true, active = true where id = 131;
 
 -- Logos
 update teams t set logo_url = v.logo_url
