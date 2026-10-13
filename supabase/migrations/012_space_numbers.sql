@@ -135,3 +135,5 @@ update teams t set booth_number = v.b from (values
 (133, '763'),
 (137, 'J&W')
 ) v(id, b) where t.id = v.id;
+-- From the Cvent Map page (Oct 13): Eminent Oilfield Services is space 153.
+update teams set booth_number = '153' where id = 135;
