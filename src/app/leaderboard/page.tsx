@@ -8,6 +8,7 @@ import { supabase, Team } from "@/lib/supabase";
 export default function LeaderboardPage() {
   const [teams, setTeams] = useState<Team[]>([]);
   const [loading, setLoading] = useState(true);
+  const [votingOpen, setVotingOpen] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -21,6 +22,8 @@ export default function LeaderboardPage() {
         .order("name", { ascending: true });
       if (active && data) setTeams(data as Team[]);
       setLoading(false);
+      const { data: open } = await supabase.rpc("voting_is_open");
+      if (active) setVotingOpen(Boolean(open));
     }
     load();
 
@@ -90,10 +93,12 @@ export default function LeaderboardPage() {
           <div className="flex flex-col items-center text-center pt-4 pb-8 sm:pt-8 sm:pb-10">
             <span className="divider-line w-40 mb-10" />
             <p className="font-display text-bbq-gold text-3xl sm:text-5xl lg:text-6xl 2xl:text-7xl leading-tight">
-              Voting will begin on 11/11
+              {votingOpen ? "Voting is open" : "Voting will begin on 11/11"}
             </p>
             <p className="text-bbq-gray text-sm sm:text-base lg:text-lg mt-6 uppercase tracking-[0.2em]">
-              Check back on event day
+              {votingOpen
+                ? "Scan any booth\u2019s QR code to rate them"
+                : "Check back on event day"}
             </p>
             <span className="divider-line w-40 mt-10" />
 

@@ -50,3 +50,8 @@ export async function withRetry<T extends { error: unknown }>(
   }
   return result;
 }
+
+// End of the Fan Favorite voting window (Wed Nov 11, 2026, 7:30 PM Central).
+// Must match voting_is_open() in the database.
+export const VOTING_CLOSES_AT = Date.parse("2026-11-12T01:30:00Z");
+export const votingHasEnded = () => Date.now() >= VOTING_CLOSES_AT;

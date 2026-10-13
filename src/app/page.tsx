@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { supabase } from "@/lib/supabase";
+import { supabase, votingHasEnded } from "@/lib/supabase";
 
 export const dynamic = "force-dynamic";
 
@@ -36,7 +36,11 @@ export default async function Home() {
               )}
               <span className="relative inline-flex rounded-full h-2 w-2 bg-bbq-gold" />
             </span>
-            {votingOpen ? "Voting is live" : "Voting begins Wed 11/11 · 12:30 PM"}
+            {votingOpen
+              ? "Voting is live"
+              : votingHasEnded()
+                ? "Voting has closed"
+                : "Voting begins Wed 11/11 · 12:30 PM"}
           </span>
 
           <h1 className="font-script text-bbq-white text-5xl sm:text-7xl mb-6 leading-tight">

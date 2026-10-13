@@ -71,6 +71,7 @@ export default async function VoteConfirmedPage({
               src={team.logo_url}
               alt={`${team.name} logo`}
               fill
+              priority
               className="object-contain p-2"
               sizes="288px"
             />

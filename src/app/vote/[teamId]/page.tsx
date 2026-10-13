@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { supabase, withRetry } from "@/lib/supabase";
+import { supabase, withRetry, votingHasEnded } from "@/lib/supabase";
 import VoteButton from "./vote-button";
 
 export const dynamic = "force-dynamic";
@@ -60,6 +60,7 @@ export default async function VotePage({
               src={team.logo_url}
               alt={`${team.name} logo`}
               fill
+              priority
               className="object-contain p-2"
               sizes="288px"
             />
@@ -78,15 +79,33 @@ export default async function VotePage({
             <VoteButton teamId={team.id} teamName={team.name} />
           </>
         ) : (
-          <>
-            <p className="font-display text-bbq-gold text-3xl sm:text-5xl leading-tight mb-4">
-              Voting will begin on 11/11
-            </p>
-            <p className="text-bbq-gray text-sm sm:text-base max-w-sm leading-relaxed">
-              Come back to this booth on Wednesday, November 11 to rate{" "}
-              {team.name} for Fan Favorite.
-            </p>
-          </>
+          votingHasEnded() ? (
+            <>
+              <p className="font-display text-bbq-gold text-3xl sm:text-5xl leading-tight mb-4">
+                Voting has closed
+              </p>
+              <p className="text-bbq-gray text-sm sm:text-base max-w-sm leading-relaxed mb-8">
+                Thanks for supporting {team.name}. See how the Fan Favorite
+                race finished.
+              </p>
+              <Link
+                href="/leaderboard"
+                className="inline-block bg-bbq-gold text-bbq-black font-semibold uppercase tracking-wider text-lg px-10 py-4 rounded-sm hover:bg-bbq-bronze transition-colors"
+              >
+                View Results
+              </Link>
+            </>
+          ) : (
+            <>
+              <p className="font-display text-bbq-gold text-3xl sm:text-5xl leading-tight mb-4">
+                Voting will begin on 11/11
+              </p>
+              <p className="text-bbq-gray text-sm sm:text-base max-w-sm leading-relaxed">
+                Come back to this booth on Wednesday, November 11 to rate{" "}
+                {team.name} for Fan Favorite.
+              </p>
+            </>
+          )
         )}
       </div>
     </main>
