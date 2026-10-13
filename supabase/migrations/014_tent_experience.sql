@@ -64,3 +64,6 @@ update teams set logo_url = '/team-logos/141-bolton.png' where id = 141;
 
 -- Nabors is now Canrig & Nabors
 update teams set name = 'Canrig & Nabors', logo_url = '/team-logos/58-canrig-nabors.png' where id = 58;
+
+-- WaterBridge & LandBridge combined logo
+update teams set logo_url = '/team-logos/118-waterbridge-landbridge.png' where id = 118;
