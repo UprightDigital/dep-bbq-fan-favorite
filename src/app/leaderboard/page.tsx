@@ -10,6 +10,7 @@ const BOARDS: { key: Board; label: string; title: string }[] = [
 import Image from "next/image";
 import type { RealtimePostgresUpdatePayload } from "@supabase/supabase-js";
 import { supabase, Team } from "@/lib/supabase";
+import SponsorBadge from "@/components/sponsor-badge";
 
 export default function LeaderboardPage() {
   const [teams, setTeams] = useState<Team[]>([]);
@@ -107,6 +108,9 @@ export default function LeaderboardPage() {
           <h1 className="font-display text-bbq-gold text-4xl sm:text-6xl lg:text-7xl 2xl:text-8xl tracking-wide leading-tight">
             {boardTitle}
           </h1>
+          <div className="mt-4 lg:mt-6">
+            <SponsorBadge category={board} size="lg" />
+          </div>
           <div
             role="tablist"
             className="no-print flex gap-2 mt-6 lg:mt-8 p-1 border border-bbq-gold/30 rounded-full"

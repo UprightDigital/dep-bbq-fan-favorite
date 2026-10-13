@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { votingHasEnded } from "@/lib/supabase";
 import RatingForm from "./rating-form";
+import SponsorCredits from "@/components/sponsor-credits";
 import {
   CATEGORY,
   CategoryHeading,
@@ -63,6 +64,9 @@ export default async function VotePage({
                 : CATEGORY.tent}
               .
             </p>
+            <div className="mt-10">
+              <SponsorCredits fan={isCookTeam} />
+            </div>
           </>
         )}
       </VoteShell>
@@ -74,7 +78,7 @@ export default async function VotePage({
       <TeamLogo team={team} />
       {isCookTeam ? (
         <>
-          <CategoryHeading step="Step 1 of 2" title={CATEGORY.fan} />
+          <CategoryHeading step="Step 1 of 2" title={CATEGORY.fan} sponsor="fan" />
           <RatingForm
             teamId={team.id}
             teamName={team.name}
@@ -84,7 +88,7 @@ export default async function VotePage({
         </>
       ) : (
         <>
-          <CategoryHeading title={CATEGORY.tent} />
+          <CategoryHeading title={CATEGORY.tent} sponsor="tent" />
           <RatingForm
             teamId={team.id}
             teamName={team.name}

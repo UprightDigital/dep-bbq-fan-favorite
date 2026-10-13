@@ -45,6 +45,7 @@ export default async function TentPage({
       <CategoryHeading
         step={team.kind === "Cooking" ? "Step 2 of 2" : undefined}
         title={CATEGORY.tent}
+        sponsor="tent"
       />
       <RatingForm
         teamId={team.id}

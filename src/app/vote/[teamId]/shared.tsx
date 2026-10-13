@@ -1,6 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { supabase, withRetry } from "@/lib/supabase";
+import SponsorBadge from "@/components/sponsor-badge";
+import type { SponsorKey } from "@/lib/sponsors";
 
 export type VoteTeam = {
   id: number;
@@ -94,9 +96,11 @@ export function TeamLogo({ team }: { team: VoteTeam }) {
 export function CategoryHeading({
   step,
   title,
+  sponsor,
 }: {
   step?: string;
   title: string;
+  sponsor?: SponsorKey;
 }) {
   return (
     <div className="mb-8">
@@ -108,6 +112,11 @@ export function CategoryHeading({
       <p className="font-display text-bbq-gold text-3xl sm:text-4xl leading-tight">
         {title}
       </p>
+      {sponsor && (
+        <div className="mt-3">
+          <SponsorBadge category={sponsor} size="sm" />
+        </div>
+      )}
     </div>
   );
 }

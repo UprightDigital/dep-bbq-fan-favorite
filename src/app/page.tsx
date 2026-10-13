@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { supabase, votingHasEnded } from "@/lib/supabase";
+import SponsorCredits from "@/components/sponsor-credits";
 
 export const dynamic = "force-dynamic";
 
@@ -61,6 +62,10 @@ export default async function Home() {
             hospitality tents for Best Team Tent Experience. Rate as many
             booths as you like.
           </p>
+
+          <div className="mb-10">
+            <SponsorCredits />
+          </div>
 
           <Link
             href="/leaderboard"
