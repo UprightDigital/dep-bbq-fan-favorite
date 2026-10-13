@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 
-type Status = "idle" | "voting" | "error";
+type Status = "idle" | "voting" | "error" | "closed";
 
 function Star({ filled }: { filled: boolean }) {
   return (
@@ -40,13 +40,15 @@ export default function VoteButton({
   async function handleConfirm() {
     if (!selected || status === "voting") return;
     setStatus("voting");
+    // Not retried: a vote that reached the server but lost its reply would
+    // otherwise be counted twice.
     const { error } = await supabase.rpc("add_team_rating", {
       p_team_id: teamId,
       p_rating: selected,
     });
     if (error) {
       console.error(error);
-      setStatus("error");
+      setStatus(/voting is closed/i.test(error.message) ? "closed" : "error");
       return;
     }
     router.push(`/vote/${teamId}/confirmed?rating=${selected}`);
@@ -93,6 +95,12 @@ export default function VoteButton({
             ? `Confirm ${selected} Star${selected === 1 ? "" : "s"}`
             : "Select a rating"}
       </button>
+
+      {status === "closed" && (
+        <p className="text-bbq-gold text-sm sm:text-base max-w-xs">
+          Voting is closed. Fan Favorite voting runs Wed 11/11, 12:30&ndash;7:30 PM.
+        </p>
+      )}
 
       {status === "error" && (
         <p className="text-red-400 text-sm max-w-xs">

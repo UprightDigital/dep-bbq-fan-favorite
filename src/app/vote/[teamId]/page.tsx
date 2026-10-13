@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { supabase } from "@/lib/supabase";
+import Link from "next/link";
+import { supabase, withRetry } from "@/lib/supabase";
 import VoteButton from "./vote-button";
 
 export const dynamic = "force-dynamic";
@@ -17,18 +18,29 @@ export default async function VotePage({
     notFound();
   }
 
-  const { data: team, error } = await supabase
-    .from("teams")
-    .select("id, name, logo_url")
-    .eq("id", id)
-    .eq("active", true)
-    .single();
+  const [teamResult, votingResult] = await Promise.all([
+    withRetry(() =>
+      supabase
+        .from("teams")
+        .select("id, name, logo_url")
+        .eq("id", id)
+        .eq("active", true)
+        .maybeSingle()
+    ),
+    withRetry(() => supabase.rpc("voting_is_open")),
+  ]);
 
-  if (error || !team) {
-    notFound();
+  // Couldn't reach the database even after retrying: offer a retry
+  // instead of a misleading "page not found".
+  if (teamResult.error || votingResult.error) {
+    return <TryAgain teamId={id} />;
   }
 
-  const { data: votingOpen } = await supabase.rpc("voting_is_open");
+  const team = teamResult.data;
+  if (!team) {
+    notFound();
+  }
+  const votingOpen = votingResult.data;
 
   return (
     <main className="flex-1 flex flex-col bg-brand-hero px-4 sm:px-8 py-6 sm:py-10">
@@ -76,6 +88,36 @@ export default async function VotePage({
             </p>
           </>
         )}
+      </div>
+    </main>
+  );
+}
+
+function TryAgain({ teamId }: { teamId: number }) {
+  return (
+    <main className="flex-1 flex flex-col bg-brand-hero px-4 sm:px-8 py-6 sm:py-10">
+      <div className="brand-frame flex-1 flex flex-col items-center justify-center px-6 py-12 text-center">
+        <Image
+          src="/brand/logo.png"
+          alt="Daniel Energy Partners Permian Basin BBQ Cook-Off"
+          width={220}
+          height={141}
+          priority
+          className="w-[150px] sm:w-[190px] h-auto mb-10"
+        />
+        <p className="font-display text-bbq-gold text-3xl sm:text-4xl leading-tight mb-4">
+          Hang tight
+        </p>
+        <p className="text-bbq-gray text-sm sm:text-base max-w-sm leading-relaxed mb-8">
+          We couldn&rsquo;t load this booth just now. Tap below to try again.
+        </p>
+        <Link
+          href={`/vote/${teamId}`}
+          prefetch={false}
+          className="inline-block bg-bbq-gold text-bbq-black font-semibold uppercase tracking-wider text-lg px-10 py-4 rounded-sm hover:bg-bbq-bronze transition-colors"
+        >
+          Try again
+        </Link>
       </div>
     </main>
   );

@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { supabase } from "@/lib/supabase";
+import { supabase, withRetry } from "@/lib/supabase";
 
 export const dynamic = "force-dynamic";
 
@@ -40,12 +40,14 @@ export default async function VoteConfirmedPage({
     notFound();
   }
 
-  const { data: team, error } = await supabase
-    .from("teams")
-    .select("id, name, logo_url")
-    .eq("id", id)
-    .eq("active", true)
-    .single();
+  const { data: team, error } = await withRetry(() =>
+    supabase
+      .from("teams")
+      .select("id, name, logo_url")
+      .eq("id", id)
+      .eq("active", true)
+      .single()
+  );
 
   if (error || !team) {
     notFound();

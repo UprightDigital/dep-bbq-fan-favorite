@@ -36,3 +36,17 @@ export const SITE_URL = (
 export function qrUrl(scanCode: string) {
   return `${SITE_URL}/q/${scanCode}`;
 }
+
+// Retry a Supabase call a few times before giving up, so a brief network
+// blip between the site and the database doesn't show attendees an error.
+export async function withRetry<T extends { error: unknown }>(
+  run: () => PromiseLike<T>,
+  attempts = 3
+): Promise<T> {
+  let result = await run();
+  for (let i = 1; i < attempts && result.error; i++) {
+    await new Promise((r) => setTimeout(r, 150 * i));
+    result = await run();
+  }
+  return result;
+}

@@ -1,5 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { supabase } from "@/lib/supabase";
+import { supabase, withRetry } from "@/lib/supabase";
 
 // Dynamic QR code resolver.
 //
@@ -47,12 +47,14 @@ export async function GET(
   const { code } = await params;
   const scanCode = decodeURIComponent(code).trim().toUpperCase();
 
-  const { data: team, error } = await supabase
-    .from("teams")
-    .select("id, qr_target")
-    .eq("scan_code", scanCode)
-    .eq("active", true)
-    .maybeSingle();
+  const { data: team, error } = await withRetry(() =>
+    supabase
+      .from("teams")
+      .select("id, qr_target")
+      .eq("scan_code", scanCode)
+      .eq("active", true)
+      .maybeSingle()
+  );
 
   if (error || !team) {
     if (error) console.error("QR lookup failed", scanCode, error);
