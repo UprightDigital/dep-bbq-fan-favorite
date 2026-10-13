@@ -20,6 +20,7 @@ export type Team = {
   name: string;
   votes: number;
   logo_url: string | null;
+  booth_number?: string | null;
 };
 
 // The permanent public address printed on every QR code. This is fixed on

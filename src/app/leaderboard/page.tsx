@@ -15,7 +15,7 @@ export default function LeaderboardPage() {
     async function load() {
       const { data } = await supabase
         .from("teams")
-        .select("id, name, votes, logo_url")
+        .select("id, name, votes, logo_url, booth_number")
         .eq("active", true)
         .order("votes", { ascending: false })
         .order("name", { ascending: true });
@@ -48,6 +48,9 @@ export default function LeaderboardPage() {
 
   const totalVotes = teams.reduce((sum, t) => sum + t.votes, 0);
   const [first, second, third, ...rest] = teams;
+  const alphabetical = [...teams].sort((a, b) =>
+    a.name.localeCompare(b.name, "en", { sensitivity: "base" })
+  );
 
   return (
     <main className="flex-1 bg-brand-hero px-4 sm:px-8 py-6 sm:py-10">
@@ -84,7 +87,7 @@ export default function LeaderboardPage() {
             No teams found yet. Have you run the Supabase migration?
           </p>
         ) : totalVotes === 0 ? (
-          <div className="flex flex-col items-center text-center py-16 sm:py-24">
+          <div className="flex flex-col items-center text-center pt-4 pb-8 sm:pt-8 sm:pb-10">
             <span className="divider-line w-40 mb-10" />
             <p className="font-display text-bbq-gold text-3xl sm:text-5xl lg:text-6xl 2xl:text-7xl leading-tight">
               Voting will begin on 11/11
@@ -93,6 +96,36 @@ export default function LeaderboardPage() {
               Check back on event day
             </p>
             <span className="divider-line w-40 mt-10" />
+
+            <p className="font-script text-2xl lg:text-3xl text-bbq-gray mt-14 mb-6">
+              This year&rsquo;s teams
+            </p>
+            <ol className="w-full grid grid-cols-1 xl:grid-cols-2 gap-2 lg:gap-3 border border-bbq-gold/20 rounded-sm p-2 sm:p-3 lg:p-4 text-left">
+              {alphabetical.map((team) => (
+                <li
+                  key={team.id}
+                  className="flex items-center justify-between bg-white/[0.03] border border-white/5 rounded-sm px-4 py-3 lg:px-5 lg:py-4"
+                >
+                  <span className="flex items-center gap-3 lg:gap-4 min-w-0">
+                    <span className="relative w-8 h-8 lg:w-12 lg:h-12 shrink-0 bg-bbq-white rounded-sm overflow-hidden">
+                      {team.logo_url && (
+                        <Image
+                          src={team.logo_url}
+                          alt=""
+                          fill
+                          className="object-contain p-0.5"
+                          sizes="(min-width: 1024px) 48px, 32px"
+                        />
+                      )}
+                    </span>
+                    <span className="uppercase tracking-wide text-sm sm:text-base lg:text-lg truncate">
+                      {team.name}
+                    </span>
+                  </span>
+                  {team.booth_number && <SpaceTag value={team.booth_number} />}
+                </li>
+              ))}
+            </ol>
           </div>
         ) : (
           <>
@@ -127,8 +160,13 @@ export default function LeaderboardPage() {
                       {team.name}
                     </span>
                   </span>
-                  <span className="font-display text-bbq-gold text-xl lg:text-2xl shrink-0 pl-3">
-                    {team.votes}
+                  <span className="flex items-center gap-3 lg:gap-4 shrink-0 pl-3">
+                    {team.booth_number && (
+                      <SpaceTag value={team.booth_number} />
+                    )}
+                    <span className="font-display text-bbq-gold text-xl lg:text-2xl">
+                      {team.votes}
+                    </span>
                   </span>
                 </li>
               ))}
@@ -137,6 +175,19 @@ export default function LeaderboardPage() {
         )}
       </div>
     </main>
+  );
+}
+
+function SpaceTag({ value }: { value: string }) {
+  return (
+    <span className="shrink-0 pl-3 text-right leading-tight">
+      <span className="block text-[10px] lg:text-xs uppercase tracking-[0.2em] text-bbq-gray/70">
+        Space
+      </span>
+      <span className="block font-display text-bbq-gold text-lg lg:text-2xl">
+        {value}
+      </span>
+    </span>
   );
 }
 
