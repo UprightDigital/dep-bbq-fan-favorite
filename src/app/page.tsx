@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 
-export const revalidate = 60;
+export const dynamic = "force-dynamic";
 
 export default async function Home() {
   const { data: votingOpen } = await supabase.rpc("voting_is_open");
@@ -31,10 +31,12 @@ export default async function Home() {
         <div className="flex-1 flex flex-col items-center justify-center text-center py-10">
           <span className="inline-flex items-center gap-2 border border-bbq-gold/40 rounded-full px-4 py-1.5 mb-8 text-bbq-gold text-xs uppercase tracking-[0.2em]">
             <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-bbq-gold opacity-75" />
+              {votingOpen && (
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-bbq-gold opacity-75" />
+              )}
               <span className="relative inline-flex rounded-full h-2 w-2 bg-bbq-gold" />
             </span>
-            {votingOpen ? "Voting is live" : "Voting begins 11/11"}
+            {votingOpen ? "Voting is live" : "Voting begins Wed 11/11 · 12:30 PM"}
           </span>
 
           <h1 className="font-script text-bbq-white text-5xl sm:text-7xl mb-6 leading-tight">
