@@ -24,3 +24,6 @@ update teams set name = 'NGS' where id = 136;
 -- Texas Pacific Water Resources and Weatherford are hospitality tents.
 update teams set name = 'Texas Pacific Water Resources', kind = 'Hospitality', vote_eligible = false where id = 138;
 update teams set kind = 'Hospitality', vote_eligible = false where id = 139;
+
+-- Hospitality tents can win Fan Favorite too (Oct 13).
+update teams set vote_eligible = true where kind = 'Hospitality';

@@ -15,7 +15,7 @@ export default function LeaderboardPage() {
     async function load() {
       const { data } = await supabase
         .from("teams")
-        .select("id, name, votes, logo_url, booth_number")
+        .select("id, name, votes, logo_url, booth_number, kind")
         .eq("active", true)
         .order("votes", { ascending: false })
         .order("name", { ascending: true });
@@ -118,9 +118,7 @@ export default function LeaderboardPage() {
                         />
                       )}
                     </span>
-                    <span className="uppercase tracking-wide text-sm sm:text-base lg:text-lg truncate">
-                      {team.name}
-                    </span>
+                    <TeamName team={team} />
                   </span>
                   {team.booth_number && <SpaceTag value={team.booth_number} />}
                 </li>
@@ -156,9 +154,7 @@ export default function LeaderboardPage() {
                         />
                       </span>
                     )}
-                    <span className="uppercase tracking-wide text-sm sm:text-base lg:text-lg truncate">
-                      {team.name}
-                    </span>
+                    <TeamName team={team} />
                   </span>
                   <span className="flex items-center gap-3 lg:gap-4 shrink-0 pl-3">
                     {team.booth_number && (
@@ -175,6 +171,25 @@ export default function LeaderboardPage() {
         )}
       </div>
     </main>
+  );
+}
+
+function HospitalityTag() {
+  return (
+    <span className="inline-block border border-bbq-gold/50 text-bbq-gold rounded-full px-2 py-0.5 text-[9px] lg:text-[11px] uppercase tracking-[0.2em] leading-none whitespace-nowrap">
+      Hospitality
+    </span>
+  );
+}
+
+function TeamName({ team }: { team: Team }) {
+  return (
+    <span className="min-w-0 flex flex-col items-start gap-1">
+      <span className="uppercase tracking-wide text-sm sm:text-base lg:text-lg truncate max-w-full">
+        {team.name}
+      </span>
+      {team.kind === "Hospitality" && <HospitalityTag />}
+    </span>
   );
 }
 
@@ -226,6 +241,11 @@ function Podium({ place, team }: { place: 1 | 2 | 3; team?: Team }) {
       <p className="text-xs sm:text-sm lg:text-base 2xl:text-lg text-bbq-gray uppercase tracking-wide mb-1 truncate lg:whitespace-normal lg:line-clamp-2 max-w-full px-1">
         {team.name}
       </p>
+      {team.kind === "Hospitality" && (
+        <span className="mb-1">
+          <HospitalityTag />
+        </span>
+      )}
       <p className="font-display text-2xl sm:text-3xl lg:text-5xl text-bbq-gold mb-2">
         {team.votes}
       </p>
