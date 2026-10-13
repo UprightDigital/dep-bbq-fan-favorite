@@ -116,6 +116,7 @@ export default async function DemoPage({
           sponsor="tent"
         />
         <RatingForm
+          key="tent"
           demo
           teamId={team.id}
           teamName={team.name}
@@ -133,6 +134,7 @@ export default async function DemoPage({
       <TeamLogo team={team} />
       <CategoryHeading step="Step 1 of 2" title={CATEGORY.fan} sponsor="fan" />
       <RatingForm
+        key="fan"
         demo
         teamId={team.id}
         teamName={team.name}
