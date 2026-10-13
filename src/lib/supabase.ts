@@ -29,7 +29,7 @@ export type Team = {
 // purpose: QR codes must never depend on whichever URL the admin page happens
 // to be opened from (preview deployments are login-protected).
 export const SITE_URL = (
-  process.env.NEXT_PUBLIC_SITE_URL || "https://dep-bbq-fan-favorite.vercel.app"
+  process.env.NEXT_PUBLIC_SITE_URL || "https://depbbqfanfavorite.com"
 ).replace(/\/+$/, "");
 
 // What a printed QR code encodes. It only contains the team's locked
