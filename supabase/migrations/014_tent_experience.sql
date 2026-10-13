@@ -67,3 +67,4 @@ update teams set name = 'Canrig & Nabors', logo_url = '/team-logos/58-canrig-nab
 
 -- WaterBridge & LandBridge combined logo
 update teams set logo_url = '/team-logos/118-waterbridge-landbridge.png' where id = 118;
+update teams set name = 'KLX Energy Services & Wolfpack' where id = 127;
