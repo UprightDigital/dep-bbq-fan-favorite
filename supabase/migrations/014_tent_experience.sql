@@ -58,3 +58,6 @@ select setval('teams_id_seq', (select max(id) from teams));
 -- New combined logos
 update teams set logo_url = '/team-logos/42-gryphon-butchs-transcend-permian.png' where id = 42;
 update teams set logo_url = '/team-logos/102-innio-waukesha-jenbacher-rps.png' where id = 102;
+
+-- Bolton logo
+update teams set logo_url = '/team-logos/141-bolton.png' where id = 141;
