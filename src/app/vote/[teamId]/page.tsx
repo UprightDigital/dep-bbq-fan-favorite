@@ -28,6 +28,8 @@ export default async function VotePage({
     notFound();
   }
 
+  const { data: votingOpen } = await supabase.rpc("voting_is_open");
+
   return (
     <main className="flex-1 flex flex-col bg-brand-hero px-4 sm:px-8 py-6 sm:py-10">
       <div className="brand-frame flex-1 flex flex-col items-center justify-center px-6 py-12 text-center">
@@ -56,10 +58,24 @@ export default async function VotePage({
           </h1>
         )}
 
-        <p className="font-script text-2xl text-bbq-gray mb-10">
-          You&rsquo;re voting for
-        </p>
-        <VoteButton teamId={team.id} teamName={team.name} />
+        {votingOpen ? (
+          <>
+            <p className="font-script text-2xl text-bbq-gray mb-10">
+              You&rsquo;re voting for
+            </p>
+            <VoteButton teamId={team.id} teamName={team.name} />
+          </>
+        ) : (
+          <>
+            <p className="font-display text-bbq-gold text-3xl sm:text-5xl leading-tight mb-4">
+              Voting will begin on 11/11
+            </p>
+            <p className="text-bbq-gray text-sm sm:text-base max-w-sm leading-relaxed">
+              Come back to this booth on Wednesday, November 11 to rate{" "}
+              {team.name} for Fan Favorite.
+            </p>
+          </>
+        )}
       </div>
     </main>
   );

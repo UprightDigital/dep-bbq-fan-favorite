@@ -1,7 +1,12 @@
 import Image from "next/image";
 import Link from "next/link";
+import { supabase } from "@/lib/supabase";
 
-export default function Home() {
+export const revalidate = 60;
+
+export default async function Home() {
+  const { data: votingOpen } = await supabase.rpc("voting_is_open");
+
   return (
     <main className="flex-1 flex flex-col bg-brand-hero px-4 sm:px-8 py-6 sm:py-10">
       <div className="brand-frame flex-1 flex flex-col px-6 sm:px-14 py-8 sm:py-12">
@@ -29,7 +34,7 @@ export default function Home() {
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-bbq-gold opacity-75" />
               <span className="relative inline-flex rounded-full h-2 w-2 bg-bbq-gold" />
             </span>
-            Voting is live
+            {votingOpen ? "Voting is live" : "Voting begins 11/11"}
           </span>
 
           <h1 className="font-script text-bbq-white text-5xl sm:text-7xl mb-6 leading-tight">

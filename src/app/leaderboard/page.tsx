@@ -69,10 +69,12 @@ export default function LeaderboardPage() {
           <h1 className="font-display text-bbq-gold text-4xl sm:text-6xl tracking-wide leading-tight">
             Fan Favorite Leaderboard
           </h1>
-          <p className="text-bbq-gray text-xs sm:text-sm mt-4 uppercase tracking-[0.2em]">
-            {totalVotes} total point{totalVotes === 1 ? "" : "s"} &middot; 1&ndash;5
-            stars per rating
-          </p>
+          {totalVotes > 0 && (
+            <p className="text-bbq-gray text-xs sm:text-sm mt-4 uppercase tracking-[0.2em]">
+              {totalVotes} total point{totalVotes === 1 ? "" : "s"} &middot;
+              1&ndash;5 stars per rating
+            </p>
+          )}
         </header>
 
         {loading ? (
@@ -81,6 +83,17 @@ export default function LeaderboardPage() {
           <p className="text-center text-bbq-gray">
             No teams found yet. Have you run the Supabase migration?
           </p>
+        ) : totalVotes === 0 ? (
+          <div className="flex flex-col items-center text-center py-16 sm:py-24">
+            <span className="divider-line w-40 mb-10" />
+            <p className="font-display text-bbq-gold text-3xl sm:text-5xl leading-tight">
+              Voting will begin on 11/11
+            </p>
+            <p className="text-bbq-gray text-sm sm:text-base mt-6 uppercase tracking-[0.2em]">
+              Check back on event day
+            </p>
+            <span className="divider-line w-40 mt-10" />
+          </div>
         ) : (
           <>
             <div className="grid grid-cols-3 gap-3 sm:gap-6 mb-12 items-end">
