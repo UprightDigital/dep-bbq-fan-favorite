@@ -45,7 +45,7 @@ a star.
    4 teams whose logo paths pointed at a folder that doesn't exist in this
    app; `007_moffitt_name_fix.sql` corrects team 113's name to Moffitt
    Services; `008_dynamic_qr_codes.sql` adds the optional `qr_target`
-   override and locks every team's `scan_code` (see section 6); `009_sync_team_list.sql` syncs the roster to the Oct 12 master list (112 cook teams incl. Merit Advisors, 23 hospitality tents), hides teams no longer on it and adds missing logos.
+   override and locks every team's `scan_code` (see section 6); `009_sync_team_list.sql` syncs the roster to the Oct 12 master list (113 cook teams incl. Merit Advisors and Meyer, 22 hospitality tents), hides teams no longer on it and adds missing logos.
 3. Go to **Project Settings -> API** and copy the **Project URL** and the
    **anon / public key**.
 

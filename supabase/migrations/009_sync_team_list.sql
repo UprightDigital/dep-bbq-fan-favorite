@@ -1,5 +1,5 @@
 -- Sync the roster to the master list ("All teams and Hospitality", Oct 12):
--- 112 cook teams (incl. Merit Advisors) + 23 hospitality tents (incl. Meyer).
+-- 113 cook teams (incl. Merit Advisors and Meyer) + 22 hospitality tents.
 -- Teams no longer on the list are hidden (active = false), not deleted, so
 -- their locked QR scan codes survive and they can be switched back on.
 
@@ -35,6 +35,9 @@ update teams set active = false where id in (
 
 -- Merit Advisors is a cook team (was listed as hospitality)
 update teams set kind = 'Cooking', vote_eligible = true, active = true where id = 131;
+
+-- Meyer is a cook team
+update teams set kind = 'Cooking', vote_eligible = true where id = 123;
 
 -- Logos
 update teams t set logo_url = v.logo_url
