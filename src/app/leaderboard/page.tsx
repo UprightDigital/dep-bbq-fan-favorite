@@ -2,11 +2,6 @@
 
 import { useEffect, useState } from "react";
 
-type Board = "fan" | "tent";
-const BOARDS: { key: Board; label: string; title: string }[] = [
-  { key: "fan", label: "Fan Favorite", title: "Fan Favorite" },
-  { key: "tent", label: "Best Tent Experience", title: "Best Team Tent Experience" },
-];
 import Image from "next/image";
 import type { RealtimePostgresUpdatePayload } from "@supabase/supabase-js";
 import { supabase, Team } from "@/lib/supabase";
@@ -16,20 +11,6 @@ export default function LeaderboardPage() {
   const [teams, setTeams] = useState<Team[]>([]);
   const [loading, setLoading] = useState(true);
   const [votingOpen, setVotingOpen] = useState(false);
-  const [board, setBoard] = useState<Board>("fan");
-
-  // ?board=tent opens the tent tab; ?rotate flips tabs every 20s (for a TV).
-  useEffect(() => {
-    const qs = new URLSearchParams(window.location.search);
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- one-time read of the URL on mount
-    if (qs.get("board") === "tent") setBoard("tent");
-    if (!qs.has("rotate")) return;
-    const timer = setInterval(
-      () => setBoard((b) => (b === "fan" ? "tent" : "fan")),
-      20000
-    );
-    return () => clearInterval(timer);
-  }, []);
 
   useEffect(() => {
     let active = true;
@@ -76,17 +57,18 @@ export default function LeaderboardPage() {
   }, []);
 
   // Fan Favorite is cook teams only; Tent Experience is every team.
-  const score = (t: Team) => (board === "fan" ? t.votes : t.tent_votes ?? 0);
+  // Only Fan Favorite is shown publicly; tent results are pulled by the admin.
+  const score = (t: Team) => t.votes;
   const byName = (a: Team, b: Team) =>
     a.name.localeCompare(b.name, "en", { sensitivity: "base" });
   const eligible = teams.filter(
-    (t) => board === "tent" || t.kind !== "Hospitality"
+    (t) => t.kind !== "Hospitality"
   );
   const ranked = [...eligible].sort((a, b) => score(b) - score(a) || byName(a, b));
   const totalVotes = ranked.reduce((sum, t) => sum + score(t), 0);
   const [first, second, third, ...rest] = ranked;
   const alphabetical = [...eligible].sort(byName);
-  const boardTitle = BOARDS.find((b) => b.key === board)!.title;
+  const boardTitle = "Fan Favorite";
 
   return (
     <main className="flex-1 bg-brand-hero px-4 sm:px-8 py-6 sm:py-10">
@@ -109,27 +91,7 @@ export default function LeaderboardPage() {
             {boardTitle}
           </h1>
           <div className="mt-4 lg:mt-6">
-            <SponsorBadge category={board} size="lg" />
-          </div>
-          <div
-            role="tablist"
-            className="no-print flex gap-2 mt-6 lg:mt-8 p-1 border border-bbq-gold/30 rounded-full"
-          >
-            {BOARDS.map((b) => (
-              <button
-                key={b.key}
-                role="tab"
-                aria-selected={board === b.key}
-                onClick={() => setBoard(b.key)}
-                className={`px-4 sm:px-6 py-2 rounded-full text-xs sm:text-sm lg:text-base uppercase tracking-[0.15em] transition-colors ${
-                  board === b.key
-                    ? "bg-bbq-gold text-bbq-black"
-                    : "text-bbq-gray hover:text-bbq-gold"
-                }`}
-              >
-                {b.label}
-              </button>
-            ))}
+            <SponsorBadge category="fan" size="lg" />
           </div>
           {totalVotes > 0 && (
             <p className="text-bbq-gray text-xs sm:text-sm lg:text-base mt-4 uppercase tracking-[0.2em]">
