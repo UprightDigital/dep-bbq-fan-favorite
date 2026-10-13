@@ -19,3 +19,4 @@ update teams set logo_url = '/team-logos/140-nextier.png'     where id = 140;
 update teams set name = 'J&W Services & Solnexus', booth_number = '354' where id = 48;
 update teams set active = false, booth_number = '354' where id = 137;
 update teams set booth_number = '869' where id = 136;
+update teams set name = 'NGS' where id = 136;
