@@ -109,7 +109,7 @@ export function CategoryHeading({
           {step}
         </p>
       )}
-      <p className="text-bbq-gold text-2xl sm:text-3xl leading-tight">{title}
+      <p className="font-display lowercase text-bbq-gold text-3xl sm:text-4xl leading-tight">{title}
       </p>
       {sponsor && (
         <div className="mt-3">
