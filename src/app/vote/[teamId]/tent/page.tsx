@@ -35,6 +35,8 @@ export default async function TentPage({
   if (!votingOpen) redirect(`/vote/${id}`);
 
   const fan = clampRating(ff);
+  // Cook teams must submit Fan Favorite before the tent vote.
+  if (team.kind === "Cooking" && !fan) redirect(`/vote/${id}`);
   const done = fan
     ? `/vote/${team.id}/confirmed?ff=${fan}`
     : `/vote/${team.id}/confirmed`;

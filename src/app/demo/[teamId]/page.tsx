@@ -105,7 +105,7 @@ export default async function DemoPage({
   const done = (extra: string) =>
     `${base}?step=done${fan ? `&ff=${fan}` : ""}${extra}`;
 
-  if (sp.step === "tent" || !isCook) {
+  if ((sp.step === "tent" && fan) || !isCook) {
     return (
       <VoteShell>
         <PreviewBanner />
