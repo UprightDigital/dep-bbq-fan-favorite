@@ -1,36 +1,26 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
+import { Star } from "./shared";
 
 type Status = "idle" | "voting" | "error" | "closed";
 
-function Star({ filled }: { filled: boolean }) {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      className="w-full h-full"
-      fill={filled ? "currentColor" : "none"}
-      stroke="currentColor"
-      strokeWidth={1.5}
-      aria-hidden
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M12 3.5l2.6 5.27 5.82.85-4.21 4.1.99 5.8L12 16.9l-5.2 2.73.99-5.8-4.21-4.1 5.82-.85L12 3.5z"
-      />
-    </svg>
-  );
-}
-
-export default function VoteButton({
+export default function RatingForm({
   teamId,
   teamName,
+  rpc,
+  nextPath,
+  skipHref,
 }: {
   teamId: number;
   teamName: string;
+  rpc: "add_team_rating" | "add_tent_rating";
+  // Where to go after a successful rating; "{rating}" is replaced.
+  nextPath: string;
+  skipHref?: string;
 }) {
   const router = useRouter();
   const [status, setStatus] = useState<Status>("idle");
@@ -42,7 +32,7 @@ export default function VoteButton({
     setStatus("voting");
     // Not retried: a vote that reached the server but lost its reply would
     // otherwise be counted twice.
-    const { error } = await supabase.rpc("add_team_rating", {
+    const { error } = await supabase.rpc(rpc, {
       p_team_id: teamId,
       p_rating: selected,
     });
@@ -51,7 +41,7 @@ export default function VoteButton({
       setStatus(/voting is closed/i.test(error.message) ? "closed" : "error");
       return;
     }
-    router.push(`/vote/${teamId}/confirmed?rating=${selected}`);
+    router.push(nextPath.replace("{rating}", String(selected)));
   }
 
   const display = hovered ?? selected ?? 0;
@@ -96,9 +86,18 @@ export default function VoteButton({
             : "Select a rating"}
       </button>
 
+      {skipHref && status !== "voting" && (
+        <Link
+          href={skipHref}
+          className="text-bbq-gray/70 text-sm underline underline-offset-4 hover:text-bbq-gold"
+        >
+          Skip this one
+        </Link>
+      )}
+
       {status === "closed" && (
         <p className="text-bbq-gold text-sm sm:text-base max-w-xs">
-          Voting is closed. Fan Favorite voting runs Wed 11/11, 12:30&ndash;7:30 PM.
+          Voting is closed. Voting runs Wed 11/11, 12:30&ndash;7:30 PM.
         </p>
       )}
 

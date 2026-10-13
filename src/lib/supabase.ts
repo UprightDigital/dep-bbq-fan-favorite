@@ -19,6 +19,7 @@ export type Team = {
   id: number;
   name: string;
   votes: number;
+  tent_votes?: number;
   logo_url: string | null;
   booth_number?: string | null;
   kind?: string;

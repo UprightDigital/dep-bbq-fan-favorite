@@ -1,6 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
+
+type Board = "fan" | "tent";
+const BOARDS: { key: Board; label: string; title: string }[] = [
+  { key: "fan", label: "Fan Favorite", title: "Fan Favorite" },
+  { key: "tent", label: "Best Tent Experience", title: "Best Team Tent Experience" },
+];
 import Image from "next/image";
 import type { RealtimePostgresUpdatePayload } from "@supabase/supabase-js";
 import { supabase, Team } from "@/lib/supabase";
@@ -9,6 +15,20 @@ export default function LeaderboardPage() {
   const [teams, setTeams] = useState<Team[]>([]);
   const [loading, setLoading] = useState(true);
   const [votingOpen, setVotingOpen] = useState(false);
+  const [board, setBoard] = useState<Board>("fan");
+
+  // ?board=tent opens the tent tab; ?rotate flips tabs every 20s (for a TV).
+  useEffect(() => {
+    const qs = new URLSearchParams(window.location.search);
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- one-time read of the URL on mount
+    if (qs.get("board") === "tent") setBoard("tent");
+    if (!qs.has("rotate")) return;
+    const timer = setInterval(
+      () => setBoard((b) => (b === "fan" ? "tent" : "fan")),
+      20000
+    );
+    return () => clearInterval(timer);
+  }, []);
 
   useEffect(() => {
     let active = true;
@@ -16,7 +36,7 @@ export default function LeaderboardPage() {
     async function load() {
       const { data } = await supabase
         .from("teams")
-        .select("id, name, votes, logo_url, booth_number, kind")
+        .select("id, name, votes, tent_votes, logo_url, booth_number, kind")
         .eq("active", true)
         .order("votes", { ascending: false })
         .order("name", { ascending: true });
@@ -33,12 +53,17 @@ export default function LeaderboardPage() {
         "postgres_changes",
         { event: "UPDATE", schema: "public", table: "teams" },
         (payload: RealtimePostgresUpdatePayload<Team>) => {
-          setTeams((prev) => {
-            const updated = prev.map((t) =>
-              t.id === payload.new.id ? { ...t, votes: payload.new.votes } : t
-            );
-            return updated.sort((a, b) => b.votes - a.votes);
-          });
+          setTeams((prev) =>
+            prev.map((t) =>
+              t.id === payload.new.id
+                ? {
+                    ...t,
+                    votes: payload.new.votes,
+                    tent_votes: payload.new.tent_votes,
+                  }
+                : t
+            )
+          );
         }
       )
       .subscribe();
@@ -49,11 +74,18 @@ export default function LeaderboardPage() {
     };
   }, []);
 
-  const totalVotes = teams.reduce((sum, t) => sum + t.votes, 0);
-  const [first, second, third, ...rest] = teams;
-  const alphabetical = [...teams].sort((a, b) =>
-    a.name.localeCompare(b.name, "en", { sensitivity: "base" })
+  // Fan Favorite is cook teams only; Tent Experience is every team.
+  const score = (t: Team) => (board === "fan" ? t.votes : t.tent_votes ?? 0);
+  const byName = (a: Team, b: Team) =>
+    a.name.localeCompare(b.name, "en", { sensitivity: "base" });
+  const eligible = teams.filter(
+    (t) => board === "tent" || t.kind !== "Hospitality"
   );
+  const ranked = [...eligible].sort((a, b) => score(b) - score(a) || byName(a, b));
+  const totalVotes = ranked.reduce((sum, t) => sum + score(t), 0);
+  const [first, second, third, ...rest] = ranked;
+  const alphabetical = [...eligible].sort(byName);
+  const boardTitle = BOARDS.find((b) => b.key === board)!.title;
 
   return (
     <main className="flex-1 bg-brand-hero px-4 sm:px-8 py-6 sm:py-10">
@@ -73,8 +105,28 @@ export default function LeaderboardPage() {
             <span className="h-px flex-1 bg-bbq-gold/40" />
           </div>
           <h1 className="font-display text-bbq-gold text-4xl sm:text-6xl lg:text-7xl 2xl:text-8xl tracking-wide leading-tight">
-            Fan Favorite Leaderboard
+            {boardTitle}
           </h1>
+          <div
+            role="tablist"
+            className="no-print flex gap-2 mt-6 lg:mt-8 p-1 border border-bbq-gold/30 rounded-full"
+          >
+            {BOARDS.map((b) => (
+              <button
+                key={b.key}
+                role="tab"
+                aria-selected={board === b.key}
+                onClick={() => setBoard(b.key)}
+                className={`px-4 sm:px-6 py-2 rounded-full text-xs sm:text-sm lg:text-base uppercase tracking-[0.15em] transition-colors ${
+                  board === b.key
+                    ? "bg-bbq-gold text-bbq-black"
+                    : "text-bbq-gray hover:text-bbq-gold"
+                }`}
+              >
+                {b.label}
+              </button>
+            ))}
+          </div>
           {totalVotes > 0 && (
             <p className="text-bbq-gray text-xs sm:text-sm lg:text-base mt-4 uppercase tracking-[0.2em]">
               {totalVotes} total point{totalVotes === 1 ? "" : "s"} &middot;
@@ -133,9 +185,9 @@ export default function LeaderboardPage() {
         ) : (
           <>
             <div className="grid grid-cols-3 gap-3 sm:gap-6 lg:gap-10 mb-12 lg:mb-16 items-end max-w-4xl 2xl:max-w-5xl mx-auto">
-              <Podium place={2} team={second} />
-              <Podium place={1} team={first} />
-              <Podium place={3} team={third} />
+              <Podium place={2} team={second} score={second && score(second)} />
+              <Podium place={1} team={first} score={first && score(first)} />
+              <Podium place={3} team={third} score={third && score(third)} />
             </div>
 
             <ol className="grid grid-cols-1 xl:grid-cols-2 gap-2 lg:gap-3 border border-bbq-gold/20 rounded-sm p-2 sm:p-3 lg:p-4">
@@ -166,7 +218,7 @@ export default function LeaderboardPage() {
                       <SpaceTag value={team.booth_number} />
                     )}
                     <span className="font-display text-bbq-gold text-xl lg:text-2xl">
-                      {team.votes}
+                      {score(team)}
                     </span>
                   </span>
                 </li>
@@ -211,7 +263,15 @@ function SpaceTag({ value }: { value: string }) {
   );
 }
 
-function Podium({ place, team }: { place: 1 | 2 | 3; team?: Team }) {
+function Podium({
+  place,
+  team,
+  score,
+}: {
+  place: 1 | 2 | 3;
+  team?: Team;
+  score?: number;
+}) {
   const heights: Record<1 | 2 | 3, string> = {
     1: "h-48 lg:h-64",
     2: "h-32 lg:h-44",
@@ -252,7 +312,7 @@ function Podium({ place, team }: { place: 1 | 2 | 3; team?: Team }) {
         </span>
       )}
       <p className="font-display text-2xl sm:text-3xl lg:text-5xl text-bbq-gold mb-2">
-        {team.votes}
+        {score}
       </p>
       <div
         className={`w-full ${heights[place]} ${colors[place]} ${glow[place]} rounded-t-sm flex items-start justify-center pt-3 lg:pt-5 font-display text-3xl lg:text-5xl border-t-2 border-bbq-white/20`}

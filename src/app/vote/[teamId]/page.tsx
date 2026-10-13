@@ -1,11 +1,21 @@
-import Image from "next/image";
-import { notFound } from "next/navigation";
 import Link from "next/link";
-import { supabase, withRetry, votingHasEnded } from "@/lib/supabase";
-import VoteButton from "./vote-button";
+import { notFound } from "next/navigation";
+import { votingHasEnded } from "@/lib/supabase";
+import RatingForm from "./rating-form";
+import {
+  CATEGORY,
+  CategoryHeading,
+  TeamLogo,
+  TryAgain,
+  VoteShell,
+  loadTeam,
+} from "./shared";
 
 export const dynamic = "force-dynamic";
 
+// Step 1 of the booth vote.
+//   Cook teams:        Fan Favorite  ->  Best Team Tent Experience  ->  thanks
+//   Hospitality tents: Best Team Tent Experience  ->  thanks
 export default async function VotePage({
   params,
 }: {
@@ -13,131 +23,76 @@ export default async function VotePage({
 }) {
   const { teamId } = await params;
   const id = Number(teamId);
+  if (!Number.isInteger(id)) notFound();
 
-  if (!Number.isInteger(id)) {
-    notFound();
-  }
+  const { team, votingOpen, error } = await loadTeam(id);
+  if (error) return <TryAgain href={`/vote/${id}`} />;
+  if (!team) notFound();
 
-  const [teamResult, votingResult] = await Promise.all([
-    withRetry(() =>
-      supabase
-        .from("teams")
-        .select("id, name, logo_url")
-        .eq("id", id)
-        .eq("active", true)
-        .maybeSingle()
-    ),
-    withRetry(() => supabase.rpc("voting_is_open")),
-  ]);
+  const isCookTeam = team.kind === "Cooking";
 
-  // Couldn't reach the database even after retrying: offer a retry
-  // instead of a misleading "page not found".
-  if (teamResult.error || votingResult.error) {
-    return <TryAgain teamId={id} />;
-  }
-
-  const team = teamResult.data;
-  if (!team) {
-    notFound();
-  }
-  const votingOpen = votingResult.data;
-
-  return (
-    <main className="flex-1 flex flex-col bg-brand-hero px-4 sm:px-8 py-6 sm:py-10">
-      <div className="brand-frame flex-1 flex flex-col items-center justify-center px-6 py-12 text-center">
-        <Image
-          src="/brand/logo.png"
-          alt="Daniel Energy Partners Permian Basin BBQ Cook-Off"
-          width={220}
-          height={141}
-          priority
-          className="w-[150px] sm:w-[190px] h-auto mb-10"
-        />
-
-        {team.logo_url ? (
-          <div className="relative w-56 h-36 sm:w-72 sm:h-44 mb-8 bg-bbq-white rounded-sm p-3">
-            <Image
-              src={team.logo_url}
-              alt={`${team.name} logo`}
-              fill
-              priority
-              className="object-contain p-2"
-              sizes="288px"
-            />
-          </div>
-        ) : (
-          <h1 className="font-display text-bbq-gold text-4xl sm:text-6xl mb-8 max-w-2xl leading-tight">
-            {team.name}
-          </h1>
-        )}
-
-        {votingOpen ? (
+  if (!votingOpen) {
+    return (
+      <VoteShell>
+        <TeamLogo team={team} />
+        {votingHasEnded() ? (
           <>
-            <p className="font-script text-2xl text-bbq-gray mb-10">
-              You&rsquo;re voting for
+            <p className="font-display text-bbq-gold text-3xl sm:text-5xl leading-tight mb-4">
+              Voting has closed
             </p>
-            <VoteButton teamId={team.id} teamName={team.name} />
+            <p className="text-bbq-gray text-sm sm:text-base max-w-sm leading-relaxed mb-8">
+              Thanks for supporting {team.name}. See how the race finished.
+            </p>
+            <Link
+              href="/leaderboard"
+              className="inline-block bg-bbq-gold text-bbq-black font-semibold uppercase tracking-wider text-lg px-10 py-4 rounded-sm hover:bg-bbq-bronze transition-colors"
+            >
+              View Results
+            </Link>
           </>
         ) : (
-          votingHasEnded() ? (
-            <>
-              <p className="font-display text-bbq-gold text-3xl sm:text-5xl leading-tight mb-4">
-                Voting has closed
-              </p>
-              <p className="text-bbq-gray text-sm sm:text-base max-w-sm leading-relaxed mb-8">
-                Thanks for supporting {team.name}. See how the Fan Favorite
-                race finished.
-              </p>
-              <Link
-                href="/leaderboard"
-                className="inline-block bg-bbq-gold text-bbq-black font-semibold uppercase tracking-wider text-lg px-10 py-4 rounded-sm hover:bg-bbq-bronze transition-colors"
-              >
-                View Results
-              </Link>
-            </>
-          ) : (
-            <>
-              <p className="font-display text-bbq-gold text-3xl sm:text-5xl leading-tight mb-4">
-                Voting will begin on 11/11
-              </p>
-              <p className="text-bbq-gray text-sm sm:text-base max-w-sm leading-relaxed">
-                Come back to this booth on Wednesday, November 11 to rate{" "}
-                {team.name} for Fan Favorite.
-              </p>
-            </>
-          )
+          <>
+            <p className="font-display text-bbq-gold text-3xl sm:text-5xl leading-tight mb-4">
+              Voting will begin on 11/11
+            </p>
+            <p className="text-bbq-gray text-sm sm:text-base max-w-sm leading-relaxed">
+              Come back to this booth on Wednesday, November 11 to rate{" "}
+              {team.name} for{" "}
+              {isCookTeam
+                ? `${CATEGORY.fan} and ${CATEGORY.tent}`
+                : CATEGORY.tent}
+              .
+            </p>
+          </>
         )}
-      </div>
-    </main>
-  );
-}
+      </VoteShell>
+    );
+  }
 
-function TryAgain({ teamId }: { teamId: number }) {
   return (
-    <main className="flex-1 flex flex-col bg-brand-hero px-4 sm:px-8 py-6 sm:py-10">
-      <div className="brand-frame flex-1 flex flex-col items-center justify-center px-6 py-12 text-center">
-        <Image
-          src="/brand/logo.png"
-          alt="Daniel Energy Partners Permian Basin BBQ Cook-Off"
-          width={220}
-          height={141}
-          priority
-          className="w-[150px] sm:w-[190px] h-auto mb-10"
-        />
-        <p className="font-display text-bbq-gold text-3xl sm:text-4xl leading-tight mb-4">
-          Hang tight
-        </p>
-        <p className="text-bbq-gray text-sm sm:text-base max-w-sm leading-relaxed mb-8">
-          We couldn&rsquo;t load this booth just now. Tap below to try again.
-        </p>
-        <Link
-          href={`/vote/${teamId}`}
-          prefetch={false}
-          className="inline-block bg-bbq-gold text-bbq-black font-semibold uppercase tracking-wider text-lg px-10 py-4 rounded-sm hover:bg-bbq-bronze transition-colors"
-        >
-          Try again
-        </Link>
-      </div>
-    </main>
+    <VoteShell>
+      <TeamLogo team={team} />
+      {isCookTeam ? (
+        <>
+          <CategoryHeading step="Step 1 of 2" title={CATEGORY.fan} />
+          <RatingForm
+            teamId={team.id}
+            teamName={team.name}
+            rpc="add_team_rating"
+            nextPath={`/vote/${team.id}/tent?ff={rating}`}
+          />
+        </>
+      ) : (
+        <>
+          <CategoryHeading title={CATEGORY.tent} />
+          <RatingForm
+            teamId={team.id}
+            teamName={team.name}
+            rpc="add_tent_rating"
+            nextPath={`/vote/${team.id}/confirmed?tent={rating}`}
+          />
+        </>
+      )}
+    </VoteShell>
   );
 }
