@@ -51,26 +51,26 @@ export default function LeaderboardPage() {
 
   return (
     <main className="flex-1 bg-brand-hero px-4 sm:px-8 py-6 sm:py-10">
-      <div className="brand-frame max-w-3xl mx-auto w-full px-4 sm:px-10 py-10">
-        <header className="flex flex-col items-center text-center mb-12">
+      <div className="brand-frame max-w-3xl lg:max-w-5xl xl:max-w-7xl 2xl:max-w-[1600px] mx-auto w-full px-4 sm:px-10 lg:px-14 py-10 lg:py-14">
+        <header className="flex flex-col items-center text-center mb-12 lg:mb-16">
           <Image
             src="/brand/logo.png"
             alt="Daniel Energy Partners Permian Basin BBQ Cook-Off"
             width={260}
             height={166}
             priority
-            className="w-[170px] sm:w-[230px] h-auto mb-8"
+            className="w-[170px] sm:w-[230px] lg:w-[280px] 2xl:w-[340px] h-auto mb-8"
           />
-          <div className="flex items-center gap-4 w-full max-w-xs mb-3">
+          <div className="flex items-center gap-4 w-full max-w-xs lg:max-w-md mb-3">
             <span className="h-px flex-1 bg-bbq-gold/40" />
-            <p className="font-script text-2xl text-bbq-gray">Live results</p>
+            <p className="font-script text-2xl lg:text-3xl text-bbq-gray">Live results</p>
             <span className="h-px flex-1 bg-bbq-gold/40" />
           </div>
-          <h1 className="font-display text-bbq-gold text-4xl sm:text-6xl tracking-wide leading-tight">
+          <h1 className="font-display text-bbq-gold text-4xl sm:text-6xl lg:text-7xl 2xl:text-8xl tracking-wide leading-tight">
             Fan Favorite Leaderboard
           </h1>
           {totalVotes > 0 && (
-            <p className="text-bbq-gray text-xs sm:text-sm mt-4 uppercase tracking-[0.2em]">
+            <p className="text-bbq-gray text-xs sm:text-sm lg:text-base mt-4 uppercase tracking-[0.2em]">
               {totalVotes} total point{totalVotes === 1 ? "" : "s"} &middot;
               1&ndash;5 stars per rating
             </p>
@@ -86,48 +86,48 @@ export default function LeaderboardPage() {
         ) : totalVotes === 0 ? (
           <div className="flex flex-col items-center text-center py-16 sm:py-24">
             <span className="divider-line w-40 mb-10" />
-            <p className="font-display text-bbq-gold text-3xl sm:text-5xl leading-tight">
+            <p className="font-display text-bbq-gold text-3xl sm:text-5xl lg:text-6xl 2xl:text-7xl leading-tight">
               Voting will begin on 11/11
             </p>
-            <p className="text-bbq-gray text-sm sm:text-base mt-6 uppercase tracking-[0.2em]">
+            <p className="text-bbq-gray text-sm sm:text-base lg:text-lg mt-6 uppercase tracking-[0.2em]">
               Check back on event day
             </p>
             <span className="divider-line w-40 mt-10" />
           </div>
         ) : (
           <>
-            <div className="grid grid-cols-3 gap-3 sm:gap-6 mb-12 items-end">
+            <div className="grid grid-cols-3 gap-3 sm:gap-6 lg:gap-10 mb-12 lg:mb-16 items-end max-w-4xl 2xl:max-w-5xl mx-auto">
               <Podium place={2} team={second} />
               <Podium place={1} team={first} />
               <Podium place={3} team={third} />
             </div>
 
-            <ol className="space-y-2 border border-bbq-gold/20 rounded-sm p-2 sm:p-3">
+            <ol className="grid grid-cols-1 xl:grid-cols-2 gap-2 lg:gap-3 border border-bbq-gold/20 rounded-sm p-2 sm:p-3 lg:p-4">
               {rest.map((team, i) => (
                 <li
                   key={team.id}
-                  className="flex items-center justify-between bg-white/[0.03] border border-white/5 rounded-sm px-4 py-3"
+                  className="flex items-center justify-between bg-white/[0.03] border border-white/5 rounded-sm px-4 py-3 lg:px-5 lg:py-4"
                 >
-                  <span className="flex items-center gap-3 min-w-0">
-                    <span className="text-bbq-gray/70 w-8 text-right shrink-0 font-condensed">
+                  <span className="flex items-center gap-3 lg:gap-4 min-w-0">
+                    <span className="text-bbq-gray/70 w-8 lg:w-10 text-right shrink-0 font-condensed lg:text-lg">
                       {i + 4}
                     </span>
                     {team.logo_url && (
-                      <span className="relative w-8 h-8 shrink-0 bg-bbq-white rounded-sm overflow-hidden">
+                      <span className="relative w-8 h-8 lg:w-12 lg:h-12 shrink-0 bg-bbq-white rounded-sm overflow-hidden">
                         <Image
                           src={team.logo_url}
                           alt=""
                           fill
                           className="object-contain p-0.5"
-                          sizes="32px"
+                          sizes="(min-width: 1024px) 48px, 32px"
                         />
                       </span>
                     )}
-                    <span className="uppercase tracking-wide text-sm sm:text-base truncate">
+                    <span className="uppercase tracking-wide text-sm sm:text-base lg:text-lg truncate">
                       {team.name}
                     </span>
                   </span>
-                  <span className="font-display text-bbq-gold text-xl shrink-0 pl-3">
+                  <span className="font-display text-bbq-gold text-xl lg:text-2xl shrink-0 pl-3">
                     {team.votes}
                   </span>
                 </li>
@@ -142,9 +142,9 @@ export default function LeaderboardPage() {
 
 function Podium({ place, team }: { place: 1 | 2 | 3; team?: Team }) {
   const heights: Record<1 | 2 | 3, string> = {
-    1: "h-48",
-    2: "h-32",
-    3: "h-24",
+    1: "h-48 lg:h-64",
+    2: "h-32 lg:h-44",
+    3: "h-24 lg:h-32",
   };
   const colors: Record<1 | 2 | 3, string> = {
     1: "bg-bbq-gold text-bbq-black",
@@ -162,24 +162,24 @@ function Podium({ place, team }: { place: 1 | 2 | 3; team?: Team }) {
   return (
     <div className="flex flex-col items-center text-center min-w-0">
       {team.logo_url && (
-        <div className="relative w-12 h-12 sm:w-14 sm:h-14 mb-2 bg-bbq-white rounded-sm overflow-hidden">
+        <div className="relative w-12 h-12 sm:w-14 sm:h-14 lg:w-24 lg:h-24 2xl:w-28 2xl:h-28 mb-2 lg:mb-3 bg-bbq-white rounded-sm overflow-hidden">
           <Image
             src={team.logo_url}
             alt=""
             fill
             className="object-contain p-1"
-            sizes="56px"
+            sizes="(min-width: 1024px) 112px, 56px"
           />
         </div>
       )}
-      <p className="text-xs sm:text-sm text-bbq-gray uppercase tracking-wide mb-1 truncate max-w-full px-1">
+      <p className="text-xs sm:text-sm lg:text-base 2xl:text-lg text-bbq-gray uppercase tracking-wide mb-1 truncate lg:whitespace-normal lg:line-clamp-2 max-w-full px-1">
         {team.name}
       </p>
-      <p className="font-display text-2xl sm:text-3xl text-bbq-gold mb-2">
+      <p className="font-display text-2xl sm:text-3xl lg:text-5xl text-bbq-gold mb-2">
         {team.votes}
       </p>
       <div
-        className={`w-full ${heights[place]} ${colors[place]} ${glow[place]} rounded-t-sm flex items-start justify-center pt-3 font-display text-3xl border-t-2 border-bbq-white/20`}
+        className={`w-full ${heights[place]} ${colors[place]} ${glow[place]} rounded-t-sm flex items-start justify-center pt-3 lg:pt-5 font-display text-3xl lg:text-5xl border-t-2 border-bbq-white/20`}
       >
         {place}
       </div>
