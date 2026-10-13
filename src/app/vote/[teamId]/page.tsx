@@ -78,21 +78,23 @@ export default async function VotePage({
       <TeamLogo team={team} />
       {isCookTeam ? (
         <>
-          <CategoryHeading step="Step 1 of 2" title={CATEGORY.fan} sponsor="fan" />
+          <CategoryHeading step="Step 1 of 2" title={CATEGORY.fan} />
           <RatingForm
             teamId={team.id}
             teamName={team.name}
             rpc="add_team_rating"
+            sponsor="fan"
             nextPath={`/vote/${team.id}/tent?ff={rating}`}
           />
         </>
       ) : (
         <>
-          <CategoryHeading title={CATEGORY.tent} sponsor="tent" />
+          <CategoryHeading title={CATEGORY.tent} />
           <RatingForm
             teamId={team.id}
             teamName={team.name}
             rpc="add_tent_rating"
+            sponsor="tent"
             nextPath={`/vote/${team.id}/confirmed?tent={rating}`}
           />
         </>

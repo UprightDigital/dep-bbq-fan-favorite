@@ -30,7 +30,8 @@ export default async function TentPage({
   if (!Number.isInteger(id)) notFound();
 
   const { team, votingOpen, error } = await loadTeam(id);
-  if (error) return <TryAgain href={`/vote/${id}/tent${ff ? `?ff=${ff}` : ""}`} />;
+  if (error)
+    return <TryAgain href={`/vote/${id}/tent${ff ? `?ff=${ff}` : ""}`} />;
   if (!team) notFound();
   if (!votingOpen) redirect(`/vote/${id}`);
 
@@ -47,12 +48,12 @@ export default async function TentPage({
       <CategoryHeading
         step={team.kind === "Cooking" ? "Step 2 of 2" : undefined}
         title={CATEGORY.tent}
-        sponsor="tent"
       />
       <RatingForm
         teamId={team.id}
         teamName={team.name}
         rpc="add_tent_rating"
+        sponsor="tent"
         nextPath={`${done}${fan ? "&" : "?"}tent={rating}`}
         skipHref={fan ? done : undefined}
       />

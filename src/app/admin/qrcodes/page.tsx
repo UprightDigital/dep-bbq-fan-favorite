@@ -80,10 +80,10 @@ export default function QRCodesPage() {
         teams.map(async (team) => {
           const dataUrl = await QRCode.toDataURL(
             qrUrl(team.scan_code),
-            QR_OPTIONS
+            QR_OPTIONS,
           );
           return [team.id, dataUrl] as const;
-        })
+        }),
       );
       if (!cancelled) setQrs(Object.fromEntries(entries));
     }
@@ -96,7 +96,7 @@ export default function QRCodesPage() {
 
   const shown = useMemo(
     () => (filter === "all" ? teams : teams.filter((t) => t.kind === filter)),
-    [teams, filter]
+    [teams, filter],
   );
 
   const counts = useMemo(
@@ -105,7 +105,7 @@ export default function QRCodesPage() {
       Cooking: teams.filter((t) => t.kind === "Cooking").length,
       Hospitality: teams.filter((t) => t.kind === "Hospitality").length,
     }),
-    [teams]
+    [teams],
   );
 
   const ready = shown.length > 0 && shown.every((t) => qrs[t.id]);
@@ -123,7 +123,9 @@ export default function QRCodesPage() {
     try {
       const { default: JSZip } = await import("jszip");
       const zip = new JSZip();
-      const rows = [["Team ID", "Team", "Type", "Scan Code", "QR Link", "File"]];
+      const rows = [
+        ["Team ID", "Team", "Type", "Scan Code", "QR Link", "File"],
+      ];
       for (const team of shown) {
         const base64 = qrs[team.id].split(",")[1];
         const name = fileName(team);
@@ -139,7 +141,7 @@ export default function QRCodesPage() {
       }
       zip.file(
         "qr-codes.csv",
-        rows.map((r) => r.map(csvCell).join(",")).join("\n")
+        rows.map((r) => r.map(csvCell).join(",")).join("\n"),
       );
       const blob = await zip.generateAsync({ type: "blob" });
       const label = filter === "all" ? "all" : filter.toLowerCase();
@@ -171,9 +173,9 @@ export default function QRCodesPage() {
               <code className="text-bbq-white">
                 {SITE_URL.replace(/^https:\/\//, "")}/q/&#123;scan code&#125;
               </code>{" "}
-              and the site decides where to send people when it&rsquo;s
-              scanned, so team names, logos and destinations can change
-              without reprinting.
+              and the site decides where to send people when it&rsquo;s scanned,
+              so team names, logos and destinations can change without
+              reprinting.
             </p>
           </div>
           <div className="flex gap-2 shrink-0">

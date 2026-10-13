@@ -5,6 +5,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import { Star } from "./shared";
+import SponsorBadge from "@/components/sponsor-badge";
+import type { SponsorKey } from "@/lib/sponsors";
 
 type Status = "idle" | "voting" | "error" | "closed";
 
@@ -15,6 +17,7 @@ export default function RatingForm({
   nextPath,
   skipHref,
   demo = false,
+  sponsor,
 }: {
   teamId: number;
   teamName: string;
@@ -24,6 +27,8 @@ export default function RatingForm({
   skipHref?: string;
   // Preview mode: walks through the screens without recording a vote.
   demo?: boolean;
+  // Category sponsor shown under the confirm button.
+  sponsor?: SponsorKey;
 }) {
   const router = useRouter();
   const [status, setStatus] = useState<Status>("idle");
@@ -92,6 +97,12 @@ export default function RatingForm({
             ? `Confirm ${selected} Star${selected === 1 ? "" : "s"}`
             : "Select a rating"}
       </button>
+
+      {sponsor && (
+        <div className="mt-2">
+          <SponsorBadge category={sponsor} size="sm" />
+        </div>
+      )}
 
       {skipHref && status !== "voting" && (
         <Link

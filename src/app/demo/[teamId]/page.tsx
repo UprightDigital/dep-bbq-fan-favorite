@@ -33,7 +33,9 @@ function PreviewBanner() {
 function Stars({ label, rating }: { label: string; rating: number }) {
   return (
     <div className="flex flex-col items-center gap-2">
-      <p className="text-bbq-gray text-xs uppercase tracking-[0.2em]">{label}</p>
+      <p className="text-bbq-gray text-xs uppercase tracking-[0.2em]">
+        {label}
+      </p>
       <div className="flex gap-1 w-40 sm:w-48 text-bbq-gold">
         {[1, 2, 3, 4, 5].map((n) => (
           <span key={n} className="w-full">
@@ -113,7 +115,6 @@ export default async function DemoPage({
         <CategoryHeading
           step={isCook ? "Step 2 of 2" : undefined}
           title={CATEGORY.tent}
-          sponsor="tent"
         />
         <RatingForm
           key="tent"
@@ -121,6 +122,7 @@ export default async function DemoPage({
           teamId={team.id}
           teamName={team.name}
           rpc="add_tent_rating"
+          sponsor="tent"
           nextPath={done("&tent={rating}")}
           skipHref={isCook && fan ? done("") : undefined}
         />
@@ -132,13 +134,14 @@ export default async function DemoPage({
     <VoteShell>
       <PreviewBanner />
       <TeamLogo team={team} />
-      <CategoryHeading step="Step 1 of 2" title={CATEGORY.fan} sponsor="fan" />
+      <CategoryHeading step="Step 1 of 2" title={CATEGORY.fan} />
       <RatingForm
         key="fan"
         demo
         teamId={team.id}
         teamName={team.name}
         rpc="add_team_rating"
+        sponsor="fan"
         nextPath={`${base}?step=tent&ff={rating}`}
       />
     </VoteShell>
