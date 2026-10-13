@@ -14,6 +14,7 @@ export default function RatingForm({
   rpc,
   nextPath,
   skipHref,
+  demo = false,
 }: {
   teamId: number;
   teamName: string;
@@ -21,6 +22,8 @@ export default function RatingForm({
   // Where to go after a successful rating; "{rating}" is replaced.
   nextPath: string;
   skipHref?: string;
+  // Preview mode: walks through the screens without recording a vote.
+  demo?: boolean;
 }) {
   const router = useRouter();
   const [status, setStatus] = useState<Status>("idle");
@@ -30,6 +33,10 @@ export default function RatingForm({
   async function handleConfirm() {
     if (!selected || status === "voting") return;
     setStatus("voting");
+    if (demo) {
+      router.push(nextPath.replace("{rating}", String(selected)));
+      return;
+    }
     // Not retried: a vote that reached the server but lost its reply would
     // otherwise be counted twice.
     const { error } = await supabase.rpc(rpc, {
