@@ -13,3 +13,9 @@ select setval('teams_id_seq', (select max(id) from teams));
 
 update teams set logo_url = '/team-logos/139-weatherford.png' where id = 139;
 update teams set logo_url = '/team-logos/140-nextier.png'     where id = 140;
+
+-- From the event map (Oct 13): J&W Services and Solnexus share space 354 as
+-- one entry; Natural Gas Services Group is space 869.
+update teams set name = 'J&W Services & Solnexus', booth_number = '354' where id = 48;
+update teams set active = false, booth_number = '354' where id = 137;
+update teams set booth_number = '869' where id = 136;
