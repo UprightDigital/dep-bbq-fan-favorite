@@ -20,3 +20,7 @@ update teams set name = 'J&W Services & Solnexus', booth_number = '354' where id
 update teams set active = false, booth_number = '354' where id = 137;
 update teams set booth_number = '869' where id = 136;
 update teams set name = 'NGS' where id = 136;
+
+-- Texas Pacific Water Resources and Weatherford are hospitality tents.
+update teams set name = 'Texas Pacific Water Resources', kind = 'Hospitality', vote_eligible = false where id = 138;
+update teams set kind = 'Hospitality', vote_eligible = false where id = 139;
