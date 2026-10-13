@@ -9,3 +9,5 @@ from (values
 where t.id = v.id;
 
 update teams set logo_url = '/team-logos/102-innio-waukesha-jenbacher-revolution.png' where id = 102;
+
+update teams set name = 'INNIO / Waukesha / Jenbacher / Revolution Power Solutions' where id = 102;
