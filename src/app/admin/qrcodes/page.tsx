@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import QRCode from "qrcode";
 import { supabase, qrUrl, SITE_URL } from "@/lib/supabase";
+import { QR_OPTIONS, slugify } from "@/lib/qr";
 
 type QrTeam = {
   id: number;
@@ -13,23 +14,6 @@ type QrTeam = {
 };
 
 type Filter = "all" | "Cooking" | "Hospitality";
-
-const QR_OPTIONS = {
-  margin: 2,
-  width: 1000,
-  // "Q" survives scuffs, glare and small logos on printed signage.
-  errorCorrectionLevel: "Q" as const,
-  color: { dark: "#000000", light: "#ffffff" },
-};
-
-function slugify(s: string) {
-  return s
-    .toLowerCase()
-    .replace(/&/g, "and")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "")
-    .slice(0, 60);
-}
 
 function fileName(team: QrTeam) {
   return `${team.id}-${slugify(team.name)}-${team.scan_code}.png`;

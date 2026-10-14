@@ -119,6 +119,10 @@ open the admin page from.
    plus a `qr-codes.csv` listing team, scan code and link.
 4. **Print** for cut-out cards.
 
+Each team can also download only its own code at
+`https://depbbqfanfavorite.com/qr/{scan_code}` (add `?view=1` to open it in
+the browser instead). That's the link sent in the Fan Favorite team emails.
+
 To re-point one code, set `qr_target` on that team's row in the Supabase
 Table Editor. Clear it to go back to the vote page.
 
