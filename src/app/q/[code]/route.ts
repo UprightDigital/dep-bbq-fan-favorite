@@ -50,13 +50,14 @@ export async function GET(
   const { data: team, error } = await withRetry(() =>
     supabase
       .from("teams")
-      .select("id, qr_target")
+      .select("id, qr_target, active")
       .eq("scan_code", scanCode)
-      .eq("active", true)
       .maybeSingle()
   );
 
-  if (error || !team) {
+  // Hidden teams only resolve when they forward somewhere (e.g. a team that
+  // merged into another keeps its printed code working via qr_target).
+  if (error || !team || (!team.active && !team.qr_target?.trim())) {
     if (error) console.error("QR lookup failed", scanCode, error);
     return redirect(new URL("/", request.url));
   }
