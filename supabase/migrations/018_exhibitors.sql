@@ -9,3 +9,6 @@ update teams set name = 'DNOW Inc.'           where id = 25;
 
 update teams set kind = 'Exhibitor', vote_eligible = false
  where id in (142, 143, 144, 145, 146, 147, 148, 149, 150, 25, 136);
+
+-- NGS stays hospitality (Oct 31 correction).
+update teams set kind = 'Hospitality' where id = 136;
