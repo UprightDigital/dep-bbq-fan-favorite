@@ -13,7 +13,7 @@ type QrTeam = {
   kind: string;
 };
 
-type Filter = "all" | "Cooking" | "Hospitality";
+type Filter = "all" | "Cooking" | "Hospitality" | "Exhibitor";
 
 function fileName(team: QrTeam) {
   return `${team.id}-${slugify(team.name)}-${team.scan_code}.png`;
@@ -88,6 +88,7 @@ export default function QRCodesPage() {
       all: teams.length,
       Cooking: teams.filter((t) => t.kind === "Cooking").length,
       Hospitality: teams.filter((t) => t.kind === "Hospitality").length,
+      Exhibitor: teams.filter((t) => t.kind === "Exhibitor").length,
     }),
     [teams],
   );
@@ -139,6 +140,7 @@ export default function QRCodesPage() {
     { key: "all", label: "All" },
     { key: "Cooking", label: "Cook teams" },
     { key: "Hospitality", label: "Hospitality" },
+    { key: "Exhibitor", label: "Exhibitors" },
   ];
 
   return (

@@ -61,9 +61,7 @@ export default function LeaderboardPage() {
   const score = (t: Team) => t.votes;
   const byName = (a: Team, b: Team) =>
     a.name.localeCompare(b.name, "en", { sensitivity: "base" });
-  const eligible = teams.filter(
-    (t) => t.kind !== "Hospitality"
-  );
+  const eligible = teams.filter((t) => (t.kind ?? "Cooking") === "Cooking");
   const ranked = [...eligible].sort((a, b) => score(b) - score(a) || byName(a, b));
   const totalVotes = ranked.reduce((sum, t) => sum + score(t), 0);
   const [first, second, third, ...rest] = ranked;
@@ -197,10 +195,10 @@ export default function LeaderboardPage() {
   );
 }
 
-function HospitalityTag() {
+function KindTag({ kind }: { kind: string }) {
   return (
     <span className="inline-block border border-bbq-gold/50 text-bbq-gold rounded-full px-2 py-0.5 text-[9px] lg:text-[11px] uppercase tracking-[0.2em] leading-none whitespace-nowrap">
-      Hospitality
+      {kind}
     </span>
   );
 }
@@ -211,7 +209,7 @@ function TeamName({ team }: { team: Team }) {
       <span className="uppercase tracking-wide text-sm sm:text-base lg:text-lg truncate max-w-full">
         {team.name}
       </span>
-      {team.kind === "Hospitality" && <HospitalityTag />}
+      {team.kind && team.kind !== "Cooking" && <KindTag kind={team.kind} />}
     </span>
   );
 }
@@ -272,9 +270,9 @@ function Podium({
       <p className="text-xs sm:text-sm lg:text-base 2xl:text-lg text-bbq-gray uppercase tracking-wide mb-1 truncate lg:whitespace-normal lg:line-clamp-2 max-w-full px-1">
         {team.name}
       </p>
-      {team.kind === "Hospitality" && (
+      {team.kind && team.kind !== "Cooking" && (
         <span className="mb-1">
-          <HospitalityTag />
+          <KindTag kind={team.kind} />
         </span>
       )}
       <p className="font-display text-2xl sm:text-3xl lg:text-5xl text-bbq-gold mb-2">
