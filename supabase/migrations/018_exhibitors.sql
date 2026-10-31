@@ -12,3 +12,6 @@ update teams set kind = 'Exhibitor', vote_eligible = false
 
 -- NGS stays hospitality (Oct 31 correction).
 update teams set kind = 'Hospitality' where id = 136;
+
+-- DNOW is both cook team and exhibitor; keep one entry as a cook team.
+update teams set kind = 'Cooking', vote_eligible = true where id = 25;
