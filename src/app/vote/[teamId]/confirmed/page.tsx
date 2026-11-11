@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { supabase, withRetry } from "@/lib/supabase";
 import { CATEGORY, Star, TeamLogo, VoteShell, type VoteTeam } from "../shared";
@@ -72,12 +71,6 @@ export default async function VoteConfirmedPage({
         rating.
       </p>
 
-      <Link
-        href="/leaderboard"
-        className="inline-block bg-bbq-gold text-bbq-black font-semibold uppercase tracking-wider text-lg px-10 py-4 rounded-sm hover:bg-bbq-bronze transition-colors"
-      >
-        View Live Leaderboard
-      </Link>
     </VoteShell>
   );
 }

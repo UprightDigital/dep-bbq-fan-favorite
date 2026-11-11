@@ -67,12 +67,6 @@ export default async function Home() {
             <SponsorCredits />
           </div>
 
-          <Link
-            href="/leaderboard"
-            className="inline-block bg-bbq-gold text-bbq-black font-semibold uppercase tracking-wider text-lg px-10 py-4 rounded-sm hover:bg-bbq-bronze hover:scale-[1.03] transition-all"
-          >
-            View Live Leaderboard
-          </Link>
         </div>
 
         <div className="flex items-end justify-between">

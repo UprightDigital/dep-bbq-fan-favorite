@@ -1,5 +1,4 @@
 import Image from "next/image";
-import Link from "next/link";
 
 export default function NotFound() {
   return (
@@ -17,15 +16,8 @@ export default function NotFound() {
           We couldn&rsquo;t find that booth
         </p>
         <p className="text-bbq-gray text-sm sm:text-base max-w-sm leading-relaxed mb-8">
-          Try scanning the QR code at the booth again, or browse every team on
-          the leaderboard.
+          Try scanning the QR code at the booth again.
         </p>
-        <Link
-          href="/leaderboard"
-          className="inline-block bg-bbq-gold text-bbq-black font-semibold uppercase tracking-wider text-lg px-10 py-4 rounded-sm hover:bg-bbq-bronze transition-colors"
-        >
-          View Leaderboard
-        </Link>
       </div>
     </main>
   );

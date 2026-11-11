@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { votingHasEnded } from "@/lib/supabase";
 import RatingForm from "./rating-form";
@@ -42,14 +41,8 @@ export default async function VotePage({
               Voting has closed
             </p>
             <p className="text-bbq-gray text-sm sm:text-base max-w-sm leading-relaxed mb-8">
-              Thanks for supporting {team.name}. See how the race finished.
+              Thanks for supporting {team.name}.
             </p>
-            <Link
-              href="/leaderboard"
-              className="inline-block bg-bbq-gold text-bbq-black font-semibold uppercase tracking-wider text-lg px-10 py-4 rounded-sm hover:bg-bbq-bronze transition-colors"
-            >
-              View Results
-            </Link>
           </>
         ) : (
           <>
